@@ -1,6 +1,7 @@
 package com.libraryquest.servlets;
 
 import com.libraryquest.models.Quest;
+import com.libraryquest.models.Step;
 import com.libraryquest.services.QuestService;
 
 import javax.servlet.ServletException;
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet("/quests")
@@ -22,7 +24,11 @@ public class QuestCRUDServlet extends HttpServlet {
 
 
         String action = req.getParameter("action");
+        if (action == null) {
+            action = "list"; // Дефолтное действие
+        }
 
+        // Отображение формы для редактирования квеста
         if ("edit".equals(action)) {
             int questId = Integer.parseInt(req.getParameter("id"));
             Quest quest = QuestService.getQuestById(questId);
@@ -56,12 +62,35 @@ public class QuestCRUDServlet extends HttpServlet {
             newQuest.setTitle(title);
             newQuest.setDescription(description);
 
+            // Читаем шаги из запроса
+            String[] stepDescriptions = req.getParameterValues("steps");
+            if (stepDescriptions != null) {
+                List<Step> steps = new ArrayList<>();
+                for (String stepDesc : stepDescriptions) {
+                    steps.add(new Step(newQuest, stepDesc)); // ID будет сгенерирован в базе
+                }
+                newQuest.setSteps(steps);
+            }
+
             // Сохранение в базу данных через QuestLoader
             QuestService.saveQuest(newQuest);
-        } else if ("edit".equals(action)) {
+        } else if ("edit".equals(action)) { // Обработка данных формы для редактирования квеста
             int questId = Integer.parseInt(req.getParameter("id"));
-            Quest updatedQuest = new Quest(questId, title, description, null);
-            QuestService.saveQuest(updatedQuest);
+            Quest quest = QuestService.getQuestById(questId);
+            quest.setTitle(title);
+            quest.setDescription(description);
+
+            // Обновляем шаги
+            String[] stepDescriptions = req.getParameterValues("steps");
+            if (stepDescriptions != null) {
+                List<Step> steps = new ArrayList<>();
+                for (String stepDesc : stepDescriptions) {
+                    steps.add(new Step(quest, stepDesc));
+                }
+                quest.setSteps(steps);
+            }
+
+            QuestService.saveQuest(quest);
         }
 
         resp.sendRedirect(req.getContextPath() + "/quests");

@@ -32,6 +32,11 @@ public class Step {
     public Step() {
     }
 
+    public Step(Quest quest, String question) {
+        this.quest = quest;
+        this.question = question;
+    }
+
     public Step(Quest quest, int stepId, String question, Map<Integer, String> options) {
         this.quest = quest;
         this.stepId = stepId;

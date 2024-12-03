@@ -52,7 +52,7 @@
                 <c:if test="${quest != null && quest.steps != null}">
                     <c:forEach var="step" items="${quest.steps}">
                         <div>
-                            <input type="text" name="steps" value="${step.description}" required>
+                            <input type="text" name="steps" value="${step.question}" required>
                         </div>
                     </c:forEach>
                 </c:if>
