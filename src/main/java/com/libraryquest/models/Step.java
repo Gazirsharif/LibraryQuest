@@ -3,6 +3,7 @@ package com.libraryquest.models;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -42,5 +43,12 @@ public class Step {
         this.stepId = stepId;
         this.question = question;
         this.options = options;
+    }
+
+    public void addOption(int key, String value) {
+        if (this.options == null) {
+            this.options = new HashMap<>();
+        }
+        this.options.put(key, value);
     }
 }

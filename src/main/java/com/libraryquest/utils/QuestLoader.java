@@ -39,7 +39,10 @@ public class QuestLoader {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
-            session.saveOrUpdate(quest);
+            for (Step step : quest.getSteps()) {
+                step.setQuest(quest); // Установите обратную связь
+            }
+            session.saveOrUpdate(quest); // Hibernate сам обновит связанные шаги
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null) transaction.rollback();
