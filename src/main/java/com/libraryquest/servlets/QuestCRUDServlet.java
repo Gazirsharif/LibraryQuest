@@ -94,7 +94,7 @@ public class QuestCRUDServlet extends HttpServlet {
             quest.setDescription(description);
         } else if ("edit".equals(action)) {
             // Редактируем существующий квест
-            int questId = Integer.parseInt(req.getParameter("questId"));
+            int questId = Integer.parseInt(req.getParameter("id"));
             quest = QuestService.getQuestById(questId);
 
             if (quest != null) {

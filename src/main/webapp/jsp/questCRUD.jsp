@@ -3,10 +3,12 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Квесты</title>
 </head>
+
 <body>
     <h1>Управление квестами</h1>
 
@@ -33,8 +35,10 @@
                     </c:forEach>
                 </td>
                 <td>
-                    <a href="${pageContext.request.contextPath}/quests?action=edit&id=${quest.questId}">Редактировать</a>
-                    <a href="${pageContext.request.contextPath}/quests?action=delete&id=${quest.questId}" onclick="return confirm('Удалить квест?')">Удалить</a>
+                    <a
+                        href="${pageContext.request.contextPath}/quests?action=edit&id=${quest.questId}">Редактировать</a>
+                    <a href="${pageContext.request.contextPath}/quests?action=delete&id=${quest.questId}"
+                        onclick="return confirm('Удалить квест?')">Удалить</a>
                 </td>
             </tr>
         </c:forEach>
@@ -46,7 +50,7 @@
 
         <form action="${pageContext.request.contextPath}/quests" method="post">
             <input type="hidden" name="action" value="${quest != null ? 'edit' : 'add'}">
-            <input type="hidden" name="questId" value="${quest.questId}">
+            <input type="hidden" name="id" value="${quest.questId}">
             <div>
                 <label>Название квеста:</label>
                 <input type="text" name="title" value="${quest.title}" required>
@@ -61,14 +65,17 @@
                 <c:forEach var="step" items="${quest.steps}" varStatus="status">
                     <div class="step" data-step-index="${status.index}">
                         <label>Вопрос:</label>
-                        <input type="text" name="steps[${status.index}].question" value="${step.question}" required>
+                        <input type="text" name="steps[${status.index}].question" value="${step.question}"
+                            required>
 
                         <!-- Контейнер для опций -->
                         <div class="options-container" data-step-index="${status.index}">
                             <c:forEach var="option" items="${step.options}">
                                 <div class="option">
-                                    <input type="hidden" name="steps[${status.index}].options.keys" value="${option.key}">
-                                    <input type="text" name="steps[${status.index}].options.values" value="${option.value}" required>
+                                    <input type="hidden" name="steps[${status.index}].options.keys"
+                                        value="${option.key}">
+                                    <input type="text" name="steps[${status.index}].options.values"
+                                        value="${option.value}" required>
                                 </div>
                             </c:forEach>
                         </div>
@@ -107,18 +114,18 @@
             stepDiv.setAttribute('data-step-index', stepIndex);
 
             stepDiv.innerHTML = `
-                <label>Вопрос:</label>
-                <input type="text" name="steps[${stepIndex}].question" required>
+        <label>Вопрос:</label>
+        <input type="text" name="steps[${stepIndex}].question" required>
 
-                <div class="options-container" data-step-index="${stepIndex}">
-                    <div class="option">
-                        <input type="text" name="steps[${stepIndex}].options[0]" placeholder="Опция 1" required>
-                    </div>
-                </div>
+        <div class="options-container" data-step-index="${stepIndex}">
+            <div class="option">
+                <input type="text" name="steps[${stepIndex}].options[0]" placeholder="Опция 1" required>
+            </div>
+        </div>
 
-                <button type="button" onclick="addOption(${stepIndex})">Добавить опцию</button>
-                <button type="button" onclick="removeStep(${stepIndex})">Удалить шаг</button>
-            `;
+        <button type="button" onclick="addOption(${stepIndex})">Добавить опцию</button>
+        <button type="button" onclick="removeStep(${stepIndex})">Удалить шаг</button>
+    `;
 
             container.appendChild(stepDiv);
             stepIndex++; // Увеличиваем индекс для следующего шага
@@ -130,8 +137,8 @@
             if (container) {
                 const optionDiv = document.createElement('div');
                 optionDiv.innerHTML = `
-                    <input type="hidden" name="steps[${stepIndex}].options.keys" value="">
-                    <input type="text" name="steps[${stepIndex}].options.values" placeholder="Текст опции" required>`;
+            <input type="hidden" name="steps[${stepIndex}].options.keys" value="">
+            <input type="text" name="steps[${stepIndex}].options.values" placeholder="Текст опции" required>`;
                 container.appendChild(optionDiv);
             }
         }
@@ -161,4 +168,5 @@
 
     </script>
 </body>
+
 </html>
