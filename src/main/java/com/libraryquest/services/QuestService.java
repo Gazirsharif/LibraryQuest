@@ -34,6 +34,10 @@ public class QuestService {
         QuestLoader.saveQuest(updatedQuest);
     }
 
+    public static void deleteStepById(int questId, int stepId) {
+        QuestLoader.deleteStepById(questId, stepId);
+    }
+
     // Дополнительные методы логики
     public void markQuestAsCompleted(int questId) {
         // Логика завершения квеста

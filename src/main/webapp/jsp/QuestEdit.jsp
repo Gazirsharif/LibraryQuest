@@ -50,6 +50,7 @@
         <form action="${pageContext.request.contextPath}/questEdit" method="post">
             <input type="hidden" name="action" value="${quest != null ? 'edit' : 'add'}">
             <input type="hidden" name="id" value="${quest != null ? quest.questId : ''}">
+            <input type="hidden" id="deletedSteps" name="deletedSteps">
 
             <label for="title">Название:</label>
             <input type="text" id="title" name="title" value="${quest != null ? quest.title : ''}" required><br>
@@ -62,15 +63,18 @@
             <div id="steps-container">
                 <c:if test="${quest != null && quest.steps != null}">
                     <c:forEach var="step" items="${quest.steps}">
-                        <div>
+                        <div class="step-item">
                             <!-- Передаём ID шага -->
                             <input type="hidden" name="stepIds" value="${step.stepId}">
                             <!-- Поле для изменения описания шага -->
                             <input type="text" name="steps" value="${step.question}" required>
+                            <!-- Кнопка удаления -->
+                            <button type="button" onclick="removeStep(this, '${step.stepId}')">Удалить шаг</button>
                         </div>
                     </c:forEach>
                 </c:if>
             </div>
+            
             <button type="button" onclick="addStep()">Добавить шаг</button>
 
             <button type="submit">${quest != null ? 'Сохранить изменения' : 'Добавить'}</button>
@@ -96,6 +100,21 @@
             const div = document.createElement('div');
             div.innerHTML = '<input type="text" name="steps" required>';
             container.appendChild(div);
+        }
+
+        function removeStep(button, stepId) {
+            const stepItem = button.closest('.step-item');
+            stepItem.remove(); // Удаляем элемент из DOM
+
+            // Если шаг уже существует, добавляем его ID в скрытое поле deletedSteps
+            if (stepId) {
+                const deletedStepsField = document.getElementById('deletedSteps');
+                const deletedSteps = deletedStepsField.value ? deletedStepsField.value.split(',') : [];
+                deletedSteps.push(stepId);
+                deletedStepsField.value = deletedSteps.join(',');
+
+                console.log('Удалённые шаги:', deletedStepsInput.value); // Отображает удалённые шаги
+            }
         }
 
         // Валидация формы

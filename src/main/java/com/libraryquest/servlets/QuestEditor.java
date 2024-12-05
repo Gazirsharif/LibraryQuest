@@ -67,11 +67,33 @@ public class QuestEditor extends HttpServlet {
             quest.setTitle(title);
             quest.setDescription(description);
             quest.setSteps(extractSteps(req, quest));
+
+            // Удаление шагов
+
+            String deletedStepsParam = req.getParameter("deletedSteps");
+            System.out.println("Удалённые шаги: " + deletedStepsParam);
+
+            if (deletedStepsParam != null && !deletedStepsParam.isEmpty()) {
+                String[] deletedStepIds = deletedStepsParam.split(",");
+                for (String stepId : deletedStepIds) {
+                    try {
+                        int stpId = Integer.parseInt(stepId);
+
+                        // Передать ID квеста и шага в метод удаления
+                        QuestService.deleteStepById(questId, stpId);
+
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
             QuestService.saveQuest(quest);
         }
 
         resp.sendRedirect(req.getContextPath() + "/questEdit");
     }
+
 
 //    private List<Step> extractSteps(HttpServletRequest req, Quest quest) {
 //        String[] stepDescriptions = req.getParameterValues("steps");

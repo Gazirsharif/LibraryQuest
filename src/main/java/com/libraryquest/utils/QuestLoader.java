@@ -68,6 +68,36 @@ public class QuestLoader {
         }
     }
 
+    public static void deleteStepById(int questId, int stepId) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+
+            // Найти квест
+            Quest quest = session.get(Quest.class, questId);
+            if (quest != null) {
+                // Найти шаг внутри квеста
+                Step stepToDelete = quest.getSteps().stream()
+                        .filter(step -> step.getStepId() == stepId)
+                        .findFirst()
+                        .orElse(null);
+
+                if (stepToDelete != null) {
+                    // Удалить шаг из списка шагов квеста
+                    quest.getSteps().remove(stepToDelete);
+
+                    // Удалить шаг из базы данных
+                    session.remove(stepToDelete);
+                }
+            }
+
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Получение конкретного шага по ID квеста и ID шага
      */
