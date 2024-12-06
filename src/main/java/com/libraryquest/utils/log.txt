@@ -1,0 +1,8 @@
+//        List<StepOption> allOptions = new ArrayList<>();
+//
+//        for (Step step : steps) {
+//            Map<Integer, String> options = step.getOptions();
+//            for (Map.Entry<Integer, String> entry : options.entrySet()) {
+//                allOptions.add(new StepOption(step.getStepId(), step.getQuestion(), entry.getKey(), entry.getValue()));
+//            }
+//        }

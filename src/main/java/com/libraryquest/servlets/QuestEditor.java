@@ -94,18 +94,6 @@ public class QuestEditor extends HttpServlet {
         resp.sendRedirect(req.getContextPath() + "/questEdit");
     }
 
-
-//    private List<Step> extractSteps(HttpServletRequest req, Quest quest) {
-//        String[] stepDescriptions = req.getParameterValues("steps");
-//        List<Step> steps = new ArrayList<>();
-//        if (stepDescriptions != null) {
-//            for (String stepDesc : stepDescriptions) {
-//                steps.add(new Step(quest, stepDesc));
-//            }
-//        }
-//        return steps;
-//    }
-
     private List<Step> extractSteps(HttpServletRequest req, Quest quest) {
         String[] stepIds = req.getParameterValues("stepIds"); // IDs шагов из формы (если они есть)
         String[] stepDescriptions = req.getParameterValues("steps"); // Описания шагов

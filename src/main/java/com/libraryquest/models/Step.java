@@ -51,4 +51,14 @@ public class Step {
         }
         this.options.put(key, value);
     }
+
+    @Override
+    public String toString() {
+        return "Step{" +
+                "quest=" + quest.getQuestId() +
+                ", stepId=" + stepId +
+                ", question='" + question + '\'' +
+                ", options=" + options +
+                '}';
+    }
 }

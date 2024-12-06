@@ -32,4 +32,14 @@ public class Quest {
         this.description = description;
         this.steps = steps;
     }
+
+    @Override
+    public String toString() {
+        return "Quest{" +
+                "questId=" + questId +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", steps=" + steps +
+                '}';
+    }
 }
