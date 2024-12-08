@@ -3,9 +3,6 @@
 
 <!DOCTYPE html>
 <html lang="en">
-
-<html>
-
 <head>
     <meta charset="UTF-8">
     <title>Step Editor</title>
@@ -32,11 +29,12 @@
                 <td>${stepOption.optionValue}</td>
                 <td>
                     <!-- Кнопка редактирования -->
-                    <form action="${pageContext.request.contextPath}/stepEdit" method="post">
+                    <form action="${pageContext.request.contextPath}/stepEdit" method="get">
                         <input type="hidden" name="action" value="edit">
                         <input type="hidden" name="questId" value="${stepOption.questId}">
                         <input type="hidden" name="stepId" value="${stepOption.stepId}">
                         <input type="hidden" name="optionKey" value="${stepOption.optionKey}">
+                        <input type="hidden" name="optionValue" value="${stepOption.optionValue}">
                         <input type="submit" value="Edit">
                     </form>
 
@@ -76,6 +74,26 @@
 
         <input type="submit" value="Add Option">
     </form>
-</body>
 
+    <!-- Форма редактирования, видна только при action="edit" -->
+    <c:if test="${not empty editOption}">
+        <h2>Edit Option</h2>
+        <form action="${pageContext.request.contextPath}/stepEdit" method="post">
+            <input type="hidden" name="action" value="update">
+            <input type="hidden" name="questId" value="${editOption.questId}">
+            <input type="hidden" name="stepId" value="${editOption.stepId}">
+            <input type="hidden" name="optionKey" value="${editOption.optionKey}">
+
+            <label for="newOptionKey">New Option Key:</label>
+            <input type="number" id="newOptionKey" name="newOptionKey" value="${editOption.optionKey}" required>
+            <br>
+
+            <label for="newOptionValue">New Option Value:</label>
+            <input type="text" id="newOptionValue" name="optionValue" value="${editOption.optionValue}" required>
+            <br>
+
+            <input type="submit" value="Update Option">
+        </form>
+    </c:if>
+</body>
 </html>

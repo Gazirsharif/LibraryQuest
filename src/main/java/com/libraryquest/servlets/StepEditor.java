@@ -26,22 +26,22 @@ public class StepEditor extends HttpServlet {
         resp.setCharacterEncoding("UTF-8");
         resp.setContentType("text/html; charset=UTF-8");
 
+        String action = req.getParameter("action");
+
+        if ("edit".equalsIgnoreCase(action)) {
+            int questId = Integer.parseInt(req.getParameter("questId"));
+            int stepId = Integer.parseInt(req.getParameter("stepId"));
+            int optionKey = Integer.parseInt(req.getParameter("optionKey"));
+            String optionValue = req.getParameter("optionValue");
+
+            StepOption editOption = new StepOption(questId, stepId, null, optionKey, optionValue);
+            req.setAttribute("editOption", editOption);
+        }
+
         List<Quest> quests = QuestService.getAllQuests();
-
-//        List<StepOption> stepOptions = quests
-//                .stream()
-//                .flatMap(quest -> quest.getSteps().stream())
-//                .flatMap(step -> step.getOptions().entrySet().stream()
-//                        .map(entry -> new StepOption(step.getQuest().getQuestId(), step.getStepId(), step.getQuestion(), entry.getKey(), entry.getValue())))
-//                .collect(Collectors.toSet())
-//                .stream()
-//                .toList();
-
-        // Создаем список StepOption, добавляя шаги с опциями и шаги без них
         List<StepOption> stepOptions = quests.stream()
                 .flatMap(quest -> quest.getSteps().stream())
                 .flatMap(step -> {
-                    // Если у шага есть опции, создаем StepOption для каждой опции
                     if (step.getOptions() != null && !step.getOptions().isEmpty()) {
                         return step.getOptions().entrySet().stream()
                                 .map(entry -> new StepOption(
@@ -66,39 +66,9 @@ public class StepEditor extends HttpServlet {
                 .stream()
                 .toList();
 
-        // Печатаем результат для отладки
-        stepOptions.forEach(System.out::println);
-
         req.setAttribute("stepOptions", stepOptions);
         req.getRequestDispatcher("/jsp/StepEdit.jsp").forward(req, resp);
     }
-
-//    @Override
-//    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        String action = req.getParameter("action");
-//
-//        if ("Delete".equalsIgnoreCase(action)) {
-//            // Удаление опции
-//            int stepId = Integer.parseInt(req.getParameter("stepId"));
-//            int optionKey = Integer.parseInt(req.getParameter("optionKey"));
-//            deleteOption(stepId, optionKey);
-//        } else if ("Edit".equalsIgnoreCase(action)) {
-//            // Изменение опции
-//            int stepId = Integer.parseInt(req.getParameter("stepId"));
-//            int optionKey = Integer.parseInt(req.getParameter("optionKey"));
-//            String newValue = req.getParameter("newValue");
-//            editOption(stepId, optionKey, newValue);
-//        } else if ("Add".equalsIgnoreCase(action)) {
-//            // Добавление опции
-//            int stepId = Integer.parseInt(req.getParameter("stepId"));
-//            int newOptionKey = Integer.parseInt(req.getParameter("newOptionKey"));
-//            String newOptionValue = req.getParameter("newOptionValue");
-//            addOption(stepId, newOptionKey, newOptionValue);
-//        }
-//
-//        // После обработки действия перенаправляем обратно на страницу редактора
-//        resp.sendRedirect(req.getContextPath() + "/questEdit");
-//    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -107,34 +77,41 @@ public class StepEditor extends HttpServlet {
         resp.setContentType("text/html; charset=UTF-8");
 
         String action = req.getParameter("action");
-        int questId = Integer.parseInt(req.getParameter("questId"));
         int stepId = Integer.parseInt(req.getParameter("stepId"));
         int optionKey = Integer.parseInt(req.getParameter("optionKey"));
-        String newValue = req.getParameter("optionValue");
+        String optionValue = req.getParameter("optionValue");
 
+        Step step = QuestService.getStepById(stepId);
         switch (action) {
             case "add" -> {
-                int newOptionKey = Integer.parseInt(req.getParameter("optionKey"));
-                String newOptionValue = req.getParameter("optionValue");
-                Step stepToAdd = QuestService.getStepById(stepId);
-                stepToAdd.addOption(newOptionKey, newOptionValue);
-                QuestService.updateStep(stepToAdd);
+                step.addOption(optionKey, optionValue);
+                QuestService.updateStep(step);
             }
             case "delete" -> {
-                Step stepToDelete = QuestService.getStepById(stepId);
-                stepToDelete.getOptions().remove(optionKey);
-                QuestService.updateStep(stepToDelete);
+                step.getOptions().remove(optionKey);
+                QuestService.updateStep(step);
             }
-            case "edit" -> {
-                Step step = QuestService.getStepById(stepId);
+            case "update" -> {
+                // Старый ключ, который нужно заменить
+                int oldOptionKey = Integer.parseInt(req.getParameter("optionKey"));
+
+                // Новый ключ и значение
+                int newOptionKey = Integer.parseInt(req.getParameter("newOptionKey"));
+                String newOptionValue = req.getParameter("optionValue");
+
                 if (step != null) {
-                    step.getOptions().put(optionKey, newValue);
+                    // Удаляем старую опцию
+                    step.getOptions().remove(oldOptionKey);
+
+                    // Добавляем новую опцию с новым ключом
+                    step.getOptions().put(newOptionKey, newOptionValue);
+
+                    // Сохраняем изменения
                     QuestService.updateStep(step);
                 }
             }
         }
 
-        // После обработки перенаправляем обратно на страницу редактирования
         resp.sendRedirect(req.getContextPath() + "/stepEdit");
     }
 
