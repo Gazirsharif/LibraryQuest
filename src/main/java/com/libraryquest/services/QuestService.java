@@ -34,8 +34,17 @@ public class QuestService {
         QuestLoader.saveQuest(updatedQuest);
     }
 
+    public static void updateStep(Step step) {
+        QuestLoader.updateStep(step);
+    }
+
     public static void deleteStepById(int questId, int stepId) {
         QuestLoader.deleteStepById(questId, stepId);
+    }
+
+    public static Step getStepById(int stepId) {
+        // Реализуйте получение шага из базы данных
+        return QuestLoader.getStepById(stepId);
     }
 
     // Дополнительные методы логики

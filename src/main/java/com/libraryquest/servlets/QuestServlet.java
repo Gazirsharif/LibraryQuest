@@ -31,9 +31,8 @@ public class QuestServlet extends HttpServlet {
 
         //Деление пути
         String[] pathParts = pathInfo.split("/");
-//        System.out.println("QuestServlet - pathParts" + Arrays.toString(pathParts));
 
-        if (pathParts.length == 2) {    //Если указан только квест
+        if (pathParts.length == 2) { //Если указан только квест
             try {
                 // Логика загрузки квеста по ID
                 int questId = Integer.parseInt(pathInfo.substring(1)); // Получение ID квеста из URL
@@ -48,7 +47,6 @@ public class QuestServlet extends HttpServlet {
                 req.setAttribute("quest", quest);
                 req.getRequestDispatcher("/jsp/quest.jsp").forward(req, resp);
             } catch (NumberFormatException e) {
-//                System.err.println("Некорректный формат чисел в маршруте: " + Arrays.toString(pathParts));
                 resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Идентификаторы должны быть числовыми");
             }
         } else {

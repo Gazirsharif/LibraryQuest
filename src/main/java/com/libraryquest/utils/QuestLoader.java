@@ -24,12 +24,46 @@ public class QuestLoader {
     }
 
     /**
+     * Получение шага по ID
+     */
+    public static Step getStepById(int stepId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.get(Step.class, stepId);
+        }
+    }
+
+    /**
      * Получение всех квестов
      */
     public static List<Quest> getAllQuests() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             return session.createQuery("FROM Quest", Quest.class).list();
         }
+    }
+
+    /**
+     * Получение конкретного шага по ID квеста и ID шага
+     */
+    public static Step getStepContent(int questId, int stepId) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+
+            Quest quest = getQuestById(questId);
+            if (quest != null) {
+                return quest.getSteps().stream()
+                        .filter(step -> step.getStepId() == stepId)
+                        .findFirst()
+                        .orElse(null);
+            }
+
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     /**
@@ -43,6 +77,29 @@ public class QuestLoader {
                 step.setQuest(quest); // Установите обратную связь
             }
             session.saveOrUpdate(quest); // Hibernate сам обновит связанные шаги
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            e.printStackTrace();
+        }
+    }
+
+    public static void updateStep(Step step) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+
+            // Загрузить текущий шаг из базы данных
+            Step existingStep = session.get(Step.class, step.getStepId());
+            if (existingStep != null) {
+                // Обновить данные шага
+                existingStep.setQuestion(step.getQuestion());
+                existingStep.setOptions(step.getOptions());
+
+                // Сохранить изменения
+                session.update(existingStep);
+            }
+
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null) transaction.rollback();
@@ -96,31 +153,6 @@ public class QuestLoader {
             if (transaction != null) transaction.rollback();
             e.printStackTrace();
         }
-    }
-
-    /**
-     * Получение конкретного шага по ID квеста и ID шага
-     */
-    public static Step getStepContent(int questId, int stepId) {
-        Transaction transaction = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
-
-            Quest quest = getQuestById(questId);
-            if (quest != null) {
-                return quest.getSteps().stream()
-                        .filter(step -> step.getStepId() == stepId)
-                        .findFirst()
-                        .orElse(null);
-            }
-
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        }
-
-        return null;
     }
 
     /**

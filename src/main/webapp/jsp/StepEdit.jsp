@@ -31,17 +31,51 @@
                 <td>${stepOption.optionKey}</td>
                 <td>${stepOption.optionValue}</td>
                 <td>
-                    <form action="/stepEdit" method="post">
+                    <!-- Кнопка редактирования -->
+                    <form action="${pageContext.request.contextPath}/stepEdit" method="post">
+                        <input type="hidden" name="action" value="edit">
+                        <input type="hidden" name="questId" value="${stepOption.questId}">
                         <input type="hidden" name="stepId" value="${stepOption.stepId}">
                         <input type="hidden" name="optionKey" value="${stepOption.optionKey}">
-                        <input type="submit" name="action" value="Edit">
-                        <input type="submit" name="action" value="Delete">
+                        <input type="submit" value="Edit">
+                    </form>
+
+                    <!-- Кнопка удаления -->
+                    <form action="${pageContext.request.contextPath}/stepEdit" method="post">
+                        <input type="hidden" name="action" value="delete">
+                        <input type="hidden" name="questId" value="${stepOption.questId}">
+                        <input type="hidden" name="stepId" value="${stepOption.stepId}">
+                        <input type="hidden" name="optionKey" value="${stepOption.optionKey}">
+                        <input type="submit" value="Delete">
                     </form>
                 </td>
             </tr>
         </c:forEach>
     </table>
-    <a href="/stepEdit?action=add">Add New Option</a>
+
+    <!-- Форма добавления новой опции -->
+    <h2>Add New Option</h2>
+    <form action="${pageContext.request.contextPath}/stepEdit" method="post">
+        <input type="hidden" name="action" value="add">
+
+        <label for="questId">Quest ID:</label>
+        <input type="number" id="questId" name="questId" required>
+        <br>
+
+        <label for="stepId">Step ID:</label>
+        <input type="number" id="stepId" name="stepId" required>
+        <br>
+
+        <label for="optionKey">Option Key:</label>
+        <input type="number" id="optionKey" name="optionKey" required>
+        <br>
+
+        <label for="optionValue">Option Value:</label>
+        <input type="text" id="optionValue" name="optionValue" required>
+        <br>
+
+        <input type="submit" value="Add Option">
+    </form>
 </body>
 
 </html>

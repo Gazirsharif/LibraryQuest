@@ -22,6 +22,10 @@ public class StepEditor extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        resp.setCharacterEncoding("UTF-8");
+        resp.setContentType("text/html; charset=UTF-8");
+
         List<Quest> quests = QuestService.getAllQuests();
 
 //        List<StepOption> stepOptions = quests
@@ -68,4 +72,98 @@ public class StepEditor extends HttpServlet {
         req.setAttribute("stepOptions", stepOptions);
         req.getRequestDispatcher("/jsp/StepEdit.jsp").forward(req, resp);
     }
+
+//    @Override
+//    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+//        String action = req.getParameter("action");
+//
+//        if ("Delete".equalsIgnoreCase(action)) {
+//            // Удаление опции
+//            int stepId = Integer.parseInt(req.getParameter("stepId"));
+//            int optionKey = Integer.parseInt(req.getParameter("optionKey"));
+//            deleteOption(stepId, optionKey);
+//        } else if ("Edit".equalsIgnoreCase(action)) {
+//            // Изменение опции
+//            int stepId = Integer.parseInt(req.getParameter("stepId"));
+//            int optionKey = Integer.parseInt(req.getParameter("optionKey"));
+//            String newValue = req.getParameter("newValue");
+//            editOption(stepId, optionKey, newValue);
+//        } else if ("Add".equalsIgnoreCase(action)) {
+//            // Добавление опции
+//            int stepId = Integer.parseInt(req.getParameter("stepId"));
+//            int newOptionKey = Integer.parseInt(req.getParameter("newOptionKey"));
+//            String newOptionValue = req.getParameter("newOptionValue");
+//            addOption(stepId, newOptionKey, newOptionValue);
+//        }
+//
+//        // После обработки действия перенаправляем обратно на страницу редактора
+//        resp.sendRedirect(req.getContextPath() + "/questEdit");
+//    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        resp.setCharacterEncoding("UTF-8");
+        resp.setContentType("text/html; charset=UTF-8");
+
+        String action = req.getParameter("action");
+        int questId = Integer.parseInt(req.getParameter("questId"));
+        int stepId = Integer.parseInt(req.getParameter("stepId"));
+        int optionKey = Integer.parseInt(req.getParameter("optionKey"));
+        String newValue = req.getParameter("optionValue");
+
+        switch (action) {
+            case "add" -> {
+                int newOptionKey = Integer.parseInt(req.getParameter("optionKey"));
+                String newOptionValue = req.getParameter("optionValue");
+                Step stepToAdd = QuestService.getStepById(stepId);
+                stepToAdd.addOption(newOptionKey, newOptionValue);
+                QuestService.updateStep(stepToAdd);
+            }
+            case "delete" -> {
+                Step stepToDelete = QuestService.getStepById(stepId);
+                stepToDelete.getOptions().remove(optionKey);
+                QuestService.updateStep(stepToDelete);
+            }
+            case "edit" -> {
+                Step step = QuestService.getStepById(stepId);
+                if (step != null) {
+                    step.getOptions().put(optionKey, newValue);
+                    QuestService.updateStep(step);
+                }
+            }
+        }
+
+        // После обработки перенаправляем обратно на страницу редактирования
+        resp.sendRedirect(req.getContextPath() + "/stepEdit");
+    }
+
+
+    // Логика удаления опции
+    private void deleteOption(int stepId, int optionKey) {
+        Step step = QuestService.getStepById(stepId);
+        if (step != null) {
+            step.getOptions().remove(optionKey);
+            QuestService.updateStep(step);
+        }
+    }
+
+    // Логика изменения опции
+    private void editOption(int stepId, int optionKey, String newValue) {
+        Step step = QuestService.getStepById(stepId);
+        if (step != null) {
+            step.getOptions().put(optionKey, newValue);
+            QuestService.updateStep(step);
+        }
+    }
+
+    // Логика добавления опции
+    private void addOption(int stepId, int optionKey, String optionValue) {
+        Step step = QuestService.getStepById(stepId);
+        if (step != null) {
+            step.addOption(optionKey, optionValue);
+            QuestService.updateStep(step);
+        }
+    }
+
 }
