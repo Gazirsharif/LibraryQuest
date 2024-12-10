@@ -17,6 +17,7 @@ import java.util.Map;
 
 @WebServlet("/quests")
 public class QuestCRUDServlet extends HttpServlet {
+    //TODO: По сути класс был первым шаблоном для операции CRUD. Из за сложности логики был разбит на QuestEdit и StepEdit
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -62,7 +63,9 @@ public class QuestCRUDServlet extends HttpServlet {
     // Обработка действия "delete"
     private void handleDeleteAction(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         int questId = Integer.parseInt(req.getParameter("id"));
-        QuestService.deleteQuest(questId);
+        Quest quest = QuestService.getQuestById(questId);
+
+        QuestService.deleteQuest(quest);
         resp.sendRedirect(req.getContextPath() + "/quests");
     }
 

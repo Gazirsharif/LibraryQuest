@@ -1,4 +1,4 @@
-package com.libraryquest.utils;
+package com.libraryquest.dao;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;

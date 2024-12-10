@@ -1,8 +1,8 @@
 package com.libraryquest.services;
 
+import com.libraryquest.dao.QuestLoader;
 import com.libraryquest.models.Quest;
 import com.libraryquest.models.Step;
-import com.libraryquest.utils.QuestLoader;
 
 import java.util.List;
 
@@ -26,8 +26,8 @@ public class QuestService {
         return QuestLoader.getAllQuests();
     }
 
-    public static void deleteQuest(int questId) {
-        QuestLoader.deleteQuest(questId);
+    public static void deleteQuest(Quest quest) {
+        QuestLoader.deleteQuest(quest);
     }
 
     public static void saveQuest(Quest updatedQuest) {
@@ -43,7 +43,6 @@ public class QuestService {
     }
 
     public static Step getStepById(int stepId) {
-        // Реализуйте получение шага из базы данных
         return QuestLoader.getStepById(stepId);
     }
 

@@ -1,8 +1,7 @@
-package com.libraryquest.utils;
+package com.libraryquest.dao;
 
 import com.libraryquest.models.Quest;
 import com.libraryquest.models.Step;
-import jakarta.persistence.EntityTransaction;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -110,11 +109,11 @@ public class QuestLoader {
     /**
      * Удаление квеста по ID
      */
-    public static void deleteQuest(int questId) {
+    public static void deleteQuest(Quest questDelete) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
-            Quest quest = session.get(Quest.class, questId);
+            Quest quest = session.get(Quest.class, questDelete.getQuestId());
             if (quest != null) {
                 session.remove(quest);
             }

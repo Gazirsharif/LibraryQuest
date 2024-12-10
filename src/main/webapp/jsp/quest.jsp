@@ -12,6 +12,9 @@
     <p>${quest.description}</p>
 
     <h2>Начать квест</h2>
-    <a href="<c:url value='/step/${quest.questId}/1' />">Перейти к первому шагу</a>
+        <a href="<c:url value='/step/${quest.questId}/${firstStep.stepId}' />">Перейти к первому шагу</a>
+
+    <h2>Список квестов</h2>
+        <a href="${pageContext.request.contextPath}/questEdit">Перейти к списку квестов</a>
 </body>
 </html>

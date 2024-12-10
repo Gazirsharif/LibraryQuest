@@ -1,6 +1,7 @@
 package com.libraryquest.servlets;
 
 import com.libraryquest.models.Quest;
+import com.libraryquest.models.Step;
 import com.libraryquest.services.QuestService;
 
 import javax.servlet.ServletException;
@@ -9,7 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.Comparator;
 
 /**
  * Общий сервлет для обработки запросов к квестам. Динамически определяет, какой квест загружать на основе URL.
@@ -43,8 +44,14 @@ public class QuestServlet extends HttpServlet {
                     return;
                 }
 
+                Step firstStep = quest.getSteps()
+                        .stream()
+                        .min(Comparator.comparing(Step::getStepId))
+                        .orElseThrow(() -> new IllegalStateException("У квеста нет шагов"));
+
                 // Передача данных в JSP
                 req.setAttribute("quest", quest);
+                req.setAttribute("firstStep", firstStep);
                 req.getRequestDispatcher("/jsp/quest.jsp").forward(req, resp);
             } catch (NumberFormatException e) {
                 resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Идентификаторы должны быть числовыми");

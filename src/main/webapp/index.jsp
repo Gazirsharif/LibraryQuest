@@ -9,7 +9,7 @@
 <body>
     <h1>Добро пожаловать в LibraryQuest!</h1>
     <p>Это интерактивная библиотека текстовых квестов. Выберите квест из списка или создайте свой!</p>
-    <a href="${pageContext.request.contextPath}/quest/1">Перейти к списку квестов</a>
+    <a href="${pageContext.request.contextPath}/questEdit">Перейти к списку квестов</a>
 </body>
 
 </html>

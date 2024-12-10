@@ -15,14 +15,26 @@
     <c:choose>
         <c:when test="${step != null}">
             <h2>${step.question}</h2>
-            <ul>
-                <c:forEach var="option" items="${step.options}">
-                    <li>
-                        <a
-                            href="${pageContext.request.contextPath}/step/${quest.questId}/${option.key}">${option.value}</a>
-                    </li>
-                </c:forEach>
-            </ul>
+
+            <c:choose>
+                <c:when test="${not empty step.options}">
+                    <ul>
+                        <c:forEach var="option" items="${step.options}">
+                            <li>
+                                <a href="${pageContext.request.contextPath}/step/${quest.questId}/${option.key}">${option.value}</a>
+                            </li>
+                        </c:forEach>
+                    </ul>
+                </c:when>
+                <c:otherwise>
+                    <p>Для данного шага нет доступных опций.</p>
+                    <p>
+                        <a href="${pageContext.request.contextPath}/quest/${quest.questId}">
+                            Вернуться к квесту
+                        </a>
+                    </p>
+                </c:otherwise>
+            </c:choose>
         </c:when>
         <c:otherwise>
             <p>Шаг не найден</p>

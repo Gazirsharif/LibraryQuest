@@ -27,16 +27,16 @@
         <c:forEach var="quest" items="${quests}">
             <tr>
                 <td>${quest.questId}</td>
-                <td>${quest.title}</td>
+                <td><a href="${pageContext.request.contextPath}/quest/${quest.questId}">${quest.title}</a></td>
                 <td>${quest.description}</td>
                 <td>
-                    <c:forEach var="step" items="${quest.steps}">
+                    <!-- Проходим по уникальным шагам -->
+                    <c:forEach var="step" items="${questSteps[quest]}">
                         ${step.question} (${step.options.size()} опций)<br>
                     </c:forEach>
                 </td>
                 <td>
-                    <a
-                        href="${pageContext.request.contextPath}/questEdit?action=edit&id=${quest.questId}">Редактировать</a>
+                    <a href="${pageContext.request.contextPath}/questEdit?action=edit&id=${quest.questId}">Редактировать</a>
                     <a href="${pageContext.request.contextPath}/questEdit?action=delete&id=${quest.questId}"
                         onclick="return confirm('Удалить квест?')">Удалить</a>
                 </td>
@@ -69,12 +69,13 @@
                             <!-- Поле для изменения описания шага -->
                             <input type="text" name="steps" value="${step.question}" required>
                             <!-- Кнопка удаления -->
-                            <button type="button" onclick="removeStep(this, '${step.stepId}')">Удалить шаг</button>
+                            <button type="button" onclick="removeStep(this, '${step.stepId}')">Удалить
+                                шаг</button>
                         </div>
                     </c:forEach>
                 </c:if>
             </div>
-            
+
             <button type="button" onclick="addStep()">Добавить шаг</button>
 
             <button type="submit">${quest != null ? 'Сохранить изменения' : 'Добавить'}</button>

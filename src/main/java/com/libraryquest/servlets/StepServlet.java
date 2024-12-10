@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
 
 /**
  * Сервлет для обработки конкретных шагов, включая переход на следующий шаг в зависимости от ответа пользователя
@@ -18,7 +17,7 @@ import java.util.Arrays;
 @WebServlet("/step/*")
 public class StepServlet extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         //Путь в ссылке
         String pathInfo = req.getPathInfo();
 

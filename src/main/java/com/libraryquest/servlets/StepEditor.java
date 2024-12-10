@@ -11,9 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -21,7 +20,7 @@ import java.util.stream.Stream;
 public class StepEditor extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
         resp.setContentType("text/html; charset=UTF-8");
@@ -62,7 +61,7 @@ public class StepEditor extends HttpServlet {
                         ));
                     }
                 })
-                .collect(Collectors.toSet())
+                .collect(Collectors.toCollection(LinkedHashSet::new))
                 .stream()
                 .toList();
 
@@ -71,7 +70,7 @@ public class StepEditor extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
         resp.setContentType("text/html; charset=UTF-8");
@@ -114,33 +113,4 @@ public class StepEditor extends HttpServlet {
 
         resp.sendRedirect(req.getContextPath() + "/stepEdit");
     }
-
-
-    // Логика удаления опции
-    private void deleteOption(int stepId, int optionKey) {
-        Step step = QuestService.getStepById(stepId);
-        if (step != null) {
-            step.getOptions().remove(optionKey);
-            QuestService.updateStep(step);
-        }
-    }
-
-    // Логика изменения опции
-    private void editOption(int stepId, int optionKey, String newValue) {
-        Step step = QuestService.getStepById(stepId);
-        if (step != null) {
-            step.getOptions().put(optionKey, newValue);
-            QuestService.updateStep(step);
-        }
-    }
-
-    // Логика добавления опции
-    private void addOption(int stepId, int optionKey, String optionValue) {
-        Step step = QuestService.getStepById(stepId);
-        if (step != null) {
-            step.addOption(optionKey, optionValue);
-            QuestService.updateStep(step);
-        }
-    }
-
 }

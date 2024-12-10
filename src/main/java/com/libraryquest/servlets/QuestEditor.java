@@ -10,17 +10,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @WebServlet("/questEdit")
 public class QuestEditor extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
         resp.setContentType("text/html; charset=UTF-8");
-
 
         String action = req.getParameter("action");
         if (action == null) {
@@ -35,18 +34,26 @@ public class QuestEditor extends HttpServlet {
             req.getRequestDispatcher("/jsp/QuestEdit.jsp").forward(req, resp);
         } else if ("delete".equals(action)) {
             int questId = Integer.parseInt(req.getParameter("id"));
-            QuestService.deleteQuest(questId);
+            Quest quest = QuestService.getQuestById(questId);
+            QuestService.deleteQuest(quest);
             resp.sendRedirect(req.getContextPath() + "/questEdit");
             return;
         }
 
         List<Quest> quests = QuestService.getAllQuests();
+
+        Map<Quest, Set<Step>> questSteps = quests
+                .stream()
+                .collect(Collectors.toMap(quest -> quest,
+                        quest -> new LinkedHashSet<>(quest.getSteps())));
+
+        req.setAttribute("questSteps", questSteps);
         req.setAttribute("quests", quests);
         req.getRequestDispatcher("/jsp/QuestEdit.jsp").forward(req, resp);
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
         resp.setContentType("text/html; charset=UTF-8");
@@ -69,7 +76,6 @@ public class QuestEditor extends HttpServlet {
             quest.setSteps(extractSteps(req, quest));
 
             // Удаление шагов
-
             String deletedStepsParam = req.getParameter("deletedSteps");
             System.out.println("Удалённые шаги: " + deletedStepsParam);
 
@@ -94,7 +100,7 @@ public class QuestEditor extends HttpServlet {
         resp.sendRedirect(req.getContextPath() + "/questEdit");
     }
 
-    private List<Step> extractSteps(HttpServletRequest req, Quest quest) {
+    public List<Step> extractSteps(HttpServletRequest req, Quest quest) {
         String[] stepIds = req.getParameterValues("stepIds"); // IDs шагов из формы (если они есть)
         String[] stepDescriptions = req.getParameterValues("steps"); // Описания шагов
         List<Step> steps = new ArrayList<>();
