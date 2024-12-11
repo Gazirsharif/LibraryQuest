@@ -11,6 +11,9 @@
 <body>
     <h1>Step Editor</h1>
 
+    <a href="${pageContext.request.contextPath}">Перейти к начальной странице</a> <br>
+    <a href="${pageContext.request.contextPath}/questEdit">Перейти к списку квестов</a> <br><br>
+
     <table border="1">
         <tr>
             <th>Quest ID</th>

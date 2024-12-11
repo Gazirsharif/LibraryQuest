@@ -26,6 +26,17 @@ public class Quest {
     public Quest() {
     }
 
+    public Quest(String title, String description) {
+        this.title = title;
+        this.description = description;
+    }
+
+    public Quest(String title, String description, List<Step> steps) {
+        this.title = title;
+        this.description = description;
+        this.steps = steps;
+    }
+
     public Quest(int questId, String title, String description, List<Step> steps) {
         this.questId = questId;
         this.title = title;

@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * Общий сервлет для обработки запросов к квестам. Динамически определяет, какой квест загружать на основе URL.
@@ -19,14 +20,14 @@ import java.util.Comparator;
 public class QuestServlet extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         //Путь в ссылке
         String pathInfo = req.getPathInfo();
 
         if (pathInfo == null || pathInfo.equals("/")) {
             // Если ID не указан, возвращаем список всех квестов
             req.setAttribute("quests", QuestService.getAllQuests());
-            req.getRequestDispatcher("/jsp/index.jsp").forward(req, resp);
+            req.getRequestDispatcher("/index.jsp").forward(req, resp);
             return;
         }
 
@@ -44,7 +45,12 @@ public class QuestServlet extends HttpServlet {
                     return;
                 }
 
-                Step firstStep = quest.getSteps()
+                List<Step> steps = quest.getSteps();
+                if (steps == null) {
+                    throw new IllegalStateException("У квеста списка шагов");
+                }
+
+                Step firstStep = steps
                         .stream()
                         .min(Comparator.comparing(Step::getStepId))
                         .orElseThrow(() -> new IllegalStateException("У квеста нет шагов"));

@@ -1,0 +1,147 @@
+@Test
+public void testDoGetWithEditAction() throws Exception {
+    when(request.getParameter("action")).thenReturn("edit");
+    when(request.getParameter("questId")).thenReturn("1");
+    when(request.getParameter("stepId")).thenReturn("2");
+    when(request.getParameter("optionKey")).thenReturn("3");
+    when(request.getParameter("optionValue")).thenReturn("Test Option");
+    when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
+
+    List<Quest> quests = new ArrayList<>();
+    Quest mockQuest = new Quest("Test Quest", "Description", new ArrayList<>());
+    Step mockStep = new Step(mockQuest, "Test Step", Map.of(3, "Option"));
+    mockQuest.getSteps().add(mockStep);
+    quests.add(mockQuest);
+
+    Mockito.mockStatic(QuestService.class);
+    when(QuestService.getAllQuests()).thenReturn(quests);
+
+    stepEditor.doGet(request, response);
+
+    verify(request).setAttribute(eq("editOption"), any(StepOption.class));
+    verify(request).setAttribute(eq("stepOptions"), any());
+    verify(requestDispatcher).forward(request, response);
+}
+
+
+
+
+
+import com.libraryquest.models.Quest;
+import com.libraryquest.models.Step;
+import com.libraryquest.services.QuestService;
+import com.libraryquest.servlets.QuestEditor;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
+class QuestEditorTest {
+    @Mock
+    private HttpServletRequest request;
+
+    @Mock
+    private HttpServletResponse response;
+
+    @Mock
+    private RequestDispatcher requestDispatcher;
+
+    private QuestEditor questEditor;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        questEditor = new QuestEditor();
+    }
+
+    @Test
+    void testDoGet_ListQuests() throws ServletException, IOException {
+        // Подготовка данных
+        List<Quest> mockQuests = new ArrayList<>();
+        mockQuests.add(new Quest(1, "Quest 1", "Description 1", new ArrayList<>()));
+        mockQuests.add(new Quest(2, "Quest 2", "Description 2", new ArrayList<>()));
+
+        // Мокаем статические методы QuestService с использованием PowerMockito или аналогичного инструмента
+        try (MockedStatic<QuestService> mockedService = Mockito.mockStatic(QuestService.class)) {
+            mockedService.when(QuestService::getAllQuests).thenReturn(mockQuests);
+
+            when(request.getParameter("action")).thenReturn(null); // Дефолтное действие — list
+            when(request.getRequestDispatcher("/jsp/QuestEdit.jsp")).thenReturn(requestDispatcher);
+
+            // Вызов
+            questEditor.doGet(request, response);
+
+            // Проверка
+            verify(request).setAttribute("quests", mockQuests);
+            verify(requestDispatcher).forward(request, response);
+        }
+    }
+
+    @Test
+    void testDoGet_EditQuest() throws ServletException, IOException {
+        // Подготовка данных
+        Quest mockQuest = new Quest(1, "Test Quest", "Test Description", new ArrayList<>());
+
+        when(request.getParameter("action")).thenReturn("edit");
+        when(request.getParameter("id")).thenReturn("1");
+        when(QuestService.getQuestById(1)).thenReturn(mockQuest);
+        when(request.getRequestDispatcher("/jsp/QuestEdit.jsp")).thenReturn(requestDispatcher);
+
+        // Вызов
+        questEditor.doGet(request, response);
+
+        // Проверка
+        verify(request).setAttribute("quest", mockQuest);
+        verify(requestDispatcher).forward(request, response);
+    }
+
+    @Test
+    void testDoPost_AddQuest() throws ServletException, IOException {
+        // Подготовка данных
+        when(request.getParameter("action")).thenReturn("add");
+        when(request.getParameter("title")).thenReturn("New Quest");
+        when(request.getParameter("description")).thenReturn("New Description");
+        when(request.getParameterValues("steps")).thenReturn(new String[]{"Step 1", "Step 2"});
+
+        // Мокируем статический метод
+        try (MockedStatic<QuestService> questServiceMockedStatic = mockStatic(QuestService.class)) {
+            // Вызов
+            questEditor.doPost(request, response);
+
+            // Проверка, что статический метод был вызван
+            questServiceMockedStatic.verify(() -> QuestService.saveQuest(any(Quest.class)), times(1));
+            verify(response).sendRedirect(anyString());
+        }
+    }
+
+    @Test
+    void testExtractSteps() {
+        // Подготовка данных
+        Quest quest = new Quest(1, "Test Quest", "Description", new ArrayList<>());
+        when(request.getParameterValues("stepIds")).thenReturn(new String[]{"1", "2"});
+        when(request.getParameterValues("steps")).thenReturn(new String[]{"Step 1", "Step 2"});
+
+        // Вызов
+        List<Step> steps = questEditor.extractSteps(request, quest);
+
+        // Проверка
+        assert steps.size() == 2;
+        assert "Step 1".equals(steps.get(0).getQuestion());
+        assert "Step 2".equals(steps.get(1).getQuestion());
+    }
+}

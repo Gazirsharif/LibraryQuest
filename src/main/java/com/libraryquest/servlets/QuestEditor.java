@@ -32,6 +32,7 @@ public class QuestEditor extends HttpServlet {
             Quest quest = QuestService.getQuestById(questId);
             req.setAttribute("quest", quest);
             req.getRequestDispatcher("/jsp/QuestEdit.jsp").forward(req, resp);
+            return; //TODO: Что меняет?
         } else if ("delete".equals(action)) {
             int questId = Integer.parseInt(req.getParameter("id"));
             Quest quest = QuestService.getQuestById(questId);
@@ -64,20 +65,23 @@ public class QuestEditor extends HttpServlet {
 
         if ("add".equals(action)) {
             Quest newQuest = new Quest();
+
             newQuest.setTitle(title);
             newQuest.setDescription(description);
             newQuest.setSteps(extractSteps(req, newQuest));
+
             QuestService.saveQuest(newQuest);
         } else if ("edit".equals(action)) {
             int questId = Integer.parseInt(req.getParameter("id"));
             Quest quest = QuestService.getQuestById(questId);
+
             quest.setTitle(title);
             quest.setDescription(description);
             quest.setSteps(extractSteps(req, quest));
 
             // Удаление шагов
             String deletedStepsParam = req.getParameter("deletedSteps");
-            System.out.println("Удалённые шаги: " + deletedStepsParam);
+//            System.out.println("Удалённые шаги: " + deletedStepsParam);
 
             if (deletedStepsParam != null && !deletedStepsParam.isEmpty()) {
                 String[] deletedStepIds = deletedStepsParam.split(",");

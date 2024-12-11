@@ -12,6 +12,9 @@
 <body>
     <h1>Управление квестами</h1>
 
+    <a href="${pageContext.request.contextPath}">Перейти к начальной странице</a> <br>
+    <a href="${pageContext.request.contextPath}/stepEdit">Перейти к списку шагов</a> <br><br>
+
     <!-- Кнопка добавления -->
     <button onclick="showAddForm()">Добавить квест</button>
 

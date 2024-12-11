@@ -29,7 +29,7 @@ public class StepServlet extends HttpServlet {
         // Разделение пути для получения questId и stepId
         String[] pathParts = pathInfo.substring(1).split("/");
         if (pathParts.length != 2) {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Некорректный маршрут для шагов");
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Некорректный маршрут для шагов, путь должен быть вида questId/stepId");
             return;
         }
 
