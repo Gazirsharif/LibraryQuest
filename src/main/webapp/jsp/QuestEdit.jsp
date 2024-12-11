@@ -2,52 +2,157 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 
 <head>
     <meta charset="UTF-8">
     <title>Квесты</title>
+    <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 20px;
+                background-color: #f4f4f9;
+                color: #333;
+            }
+
+            h1 {
+                text-align: center;
+                color: #444;
+            }
+
+            button {
+                background-color: #007bff;
+                color: #fff;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+                margin: 10px 0;
+            }
+
+            button:hover {
+                background-color: #0056b3;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+            }
+
+            table th, table td {
+                border: 1px solid #ddd;
+                padding: 10px;
+                text-align: left;
+            }
+
+            table th {
+                background-color: #007bff;
+                color: #fff;
+            }
+
+            table tr:nth-child(even) {
+                background-color: #f9f9f9;
+            }
+
+            table tr:hover {
+                background-color: #f1f1f1;
+            }
+
+            a {
+                color: #007bff;
+                text-decoration: none;
+                transition: color 0.3s ease;
+            }
+
+            a:hover {
+                color: #0056b3;
+            }
+
+            #form-container {
+                background-color: #fff;
+                border: 1px solid #ddd;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                max-width: 600px;
+                margin: 20px auto;
+            }
+
+            #form-container div {
+                margin-bottom: 15px;
+            }
+
+            #form-container label {
+                display: block;
+                margin-bottom: 5px;
+                font-weight: bold;
+            }
+
+            #form-container input, #form-container textarea {
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+            }
+
+            #steps-container .step {
+                margin-bottom: 20px;
+                padding: 10px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                background-color: #f9f9f9;
+            }
+
+            #steps-container .step button {
+                margin-top: 10px;
+            }
+        </style>
 </head>
 
 <body>
-    <h1>Управление квестами</h1>
+    <header>
+        <h1>Управление квестами</h1>
+    </header>
 
-    <a href="${pageContext.request.contextPath}">Перейти к начальной странице</a> <br>
-    <a href="${pageContext.request.contextPath}/stepEdit">Перейти к списку шагов</a> <br><br>
+    <div class="content">
+        <div style="text-align:center; margin: 20px;">
+            <a href="${pageContext.request.contextPath}">Перейти к начальной странице</a> |
+            <a href="${pageContext.request.contextPath}/stepEdit">Перейти к списку шагов</a>
+        </div>
 
-    <!-- Кнопка добавления -->
-    <button onclick="showAddForm()">Добавить квест</button>
+        <button onclick="showAddForm()">Добавить квест</button>
 
-    <!-- Таблица квестов -->
-    <table border="1">
-        <tr>
-            <th>ID</th>
-            <th>Название</th>
-            <th>Описание</th>
-            <th>Шаги</th>
-            <th>Действия</th>
-        </tr>
-        <c:forEach var="quest" items="${quests}">
+        <table>
             <tr>
-                <td>${quest.questId}</td>
-                <td><a href="${pageContext.request.contextPath}/quest/${quest.questId}">${quest.title}</a></td>
-                <td>${quest.description}</td>
-                <td>
-                    <!-- Проходим по уникальным шагам -->
-                    <c:forEach var="step" items="${questSteps[quest]}">
-                        ${step.question} (${step.options.size()} опций)<br>
-                    </c:forEach>
-                </td>
-                <td>
-                    <a href="${pageContext.request.contextPath}/questEdit?action=edit&id=${quest.questId}">Редактировать</a>
-                    <a href="${pageContext.request.contextPath}/questEdit?action=delete&id=${quest.questId}"
-                        onclick="return confirm('Удалить квест?')">Удалить</a>
-                </td>
+                <th>ID</th>
+                <th>Название</th>
+                <th>Описание</th>
+                <th>Шаги</th>
+                <th>Действия</th>
             </tr>
-        </c:forEach>
-    </table>
+            <c:forEach var="quest" items="${quests}">
+                <tr>
+                    <td>${quest.questId}</td>
+                    <td><a href="${pageContext.request.contextPath}/quest/${quest.questId}">${quest.title}</a></td>
+                    <td>${quest.description}</td>
+                    <td>
+                        <c:forEach var="step" items="${questSteps[quest]}">
+                            ${step.question} (${step.options.size()} опций)<br>
+                        </c:forEach>
+                    </td>
+                    <td>
+                        <a href="${pageContext.request.contextPath}/questEdit?action=edit&id=${quest.questId}">Редактировать</a>
+                        <a href="${pageContext.request.contextPath}/questEdit?action=delete&id=${quest.questId}"
+                           onclick="return confirm('Удалить квест?')">Удалить</a>
+                    </td>
+                </tr>
+            </c:forEach>
+        </table>
+    </div>
 
-    <!-- Форма добавления/редактирования -->
     <div id="form-container" style="display:none;">
         <h2>${quest != null ? 'Редактировать квест' : 'Добавить квест'}</h2>
         <form action="${pageContext.request.contextPath}/questEdit" method="post">
@@ -56,39 +161,37 @@
             <input type="hidden" id="deletedSteps" name="deletedSteps">
 
             <label for="title">Название:</label>
-            <input type="text" id="title" name="title" value="${quest != null ? quest.title : ''}" required><br>
+            <input type="text" id="title" name="title" value="${quest != null ? quest.title : ''}" required>
 
             <label for="description">Описание:</label>
-            <textarea id="description" name="description"
-                required>${quest != null ? quest.description : ''}</textarea><br>
+            <textarea id="description" name="description" required>${quest != null ? quest.description : ''}</textarea>
 
             <label>Шаги:</label>
             <div id="steps-container">
                 <c:if test="${quest != null && quest.steps != null}">
                     <c:forEach var="step" items="${quest.steps}">
                         <div class="step-item">
-                            <!-- Передаём ID шага -->
                             <input type="hidden" name="stepIds" value="${step.stepId}">
-                            <!-- Поле для изменения описания шага -->
                             <input type="text" name="steps" value="${step.question}" required>
-                            <!-- Кнопка удаления -->
-                            <button type="button" onclick="removeStep(this, '${step.stepId}')">Удалить
-                                шаг</button>
+                            <button type="button" onclick="removeStep(this, '${step.stepId}')">Удалить шаг</button>
                         </div>
                     </c:forEach>
                 </c:if>
             </div>
 
             <button type="button" onclick="addStep()">Добавить шаг</button>
-
             <button type="submit">${quest != null ? 'Сохранить изменения' : 'Добавить'}</button>
+            <button type="button" onclick="hideForm()">Отмена</button>
         </form>
-        <button onclick="hideForm()">Отмена</button>
     </div>
 
     <c:if test="${not empty message}">
-        <p style="color: green;">${message}</p>
+        <p class="message">${message}</p>
     </c:if>
+
+    <footer>
+        <p>© 2024 LibraryQuest. Все права защищены.</p>
+    </footer>
 
     <script>
         function showAddForm() {

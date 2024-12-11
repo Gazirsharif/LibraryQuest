@@ -7,6 +7,109 @@
 <head>
     <meta charset="UTF-8">
     <title>Квесты</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            color: #444;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin: 10px 0;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        table th {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #0056b3;
+        }
+
+        #form-container {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 20px auto;
+        }
+
+        #form-container div {
+            margin-bottom: 15px;
+        }
+
+        #form-container label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        #form-container input, #form-container textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        #steps-container .step {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        #steps-container .step button {
+            margin-top: 10px;
+        }
+    </style>
 </head>
 
 <body>
@@ -16,7 +119,7 @@
     <button onclick="showAddForm()">Добавить квест</button>
 
     <!-- Таблица квестов -->
-    <table border="1">
+    <table>
         <tr>
             <th>ID</th>
             <th>Название</th>
@@ -35,8 +138,7 @@
                     </c:forEach>
                 </td>
                 <td>
-                    <a
-                        href="${pageContext.request.contextPath}/quests?action=edit&id=${quest.questId}">Редактировать</a>
+                    <a href="${pageContext.request.contextPath}/quests?action=edit&id=${quest.questId}">Редактировать</a>
                     <a href="${pageContext.request.contextPath}/quests?action=delete&id=${quest.questId}"
                         onclick="return confirm('Удалить квест?')">Удалить</a>
                 </td>
@@ -65,17 +167,14 @@
                 <c:forEach var="step" items="${quest.steps}" varStatus="status">
                     <div class="step" data-step-index="${status.index}">
                         <label>Вопрос:</label>
-                        <input type="text" name="steps[${status.index}].question" value="${step.question}"
-                            required>
+                        <input type="text" name="steps[${status.index}].question" value="${step.question}" required>
 
                         <!-- Контейнер для опций -->
                         <div class="options-container" data-step-index="${status.index}">
                             <c:forEach var="option" items="${step.options}">
                                 <div class="option">
-                                    <input type="hidden" name="steps[${status.index}].options.keys"
-                                        value="${option.key}">
-                                    <input type="text" name="steps[${status.index}].options.values"
-                                        value="${option.value}" required>
+                                    <input type="hidden" name="steps[${status.index}].options.keys" value="${option.key}">
+                                    <input type="text" name="steps[${status.index}].options.values" value="${option.value}" required>
                                 </div>
                             </c:forEach>
                         </div>
@@ -164,7 +263,6 @@
                 });
             });
         }
-
 
     </script>
 </body>

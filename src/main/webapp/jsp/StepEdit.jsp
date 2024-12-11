@@ -6,13 +6,106 @@
 <head>
     <meta charset="UTF-8">
     <title>Step Editor</title>
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        h1, h2 {
+            color: #444;
+        }
+
+        a {
+            color: #0066cc;
+            text-decoration: none;
+            margin-right: 15px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+
+        th {
+            background-color: #f0f0f0;
+            padding: 10px;
+            text-align: left;
+        }
+
+        td {
+            padding: 10px;
+        }
+
+        form {
+            display: inline-block;
+            margin: 0;
+        }
+
+        form input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        form input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        input[type="submit"] {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Step Editor</h1>
+    <header>
+        <h1>Управление шагами</h1>
+    </header>
 
-    <a href="${pageContext.request.contextPath}">Перейти к начальной странице</a> <br>
-    <a href="${pageContext.request.contextPath}/questEdit">Перейти к списку квестов</a> <br><br>
+
+    <div style="text-align:center; margin: 20px;">
+        <a href="${pageContext.request.contextPath}">Перейти к начальной странице</a> |
+        <a href="${pageContext.request.contextPath}/questEdit">Перейти к списку квестов</a>
+    </div>
 
     <table border="1">
         <tr>
