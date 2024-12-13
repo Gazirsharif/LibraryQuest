@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -20,6 +21,13 @@ public class QuestEditor extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
         resp.setContentType("text/html; charset=UTF-8");
+
+        // Получаем имя пользователя из сессии
+        HttpSession session = req.getSession(false);
+        if (session != null) {
+            String username = (String) session.getAttribute("username");
+            req.setAttribute("username", username);
+        }
 
         String action = req.getParameter("action");
         if (action == null) {

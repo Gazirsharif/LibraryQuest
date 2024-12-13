@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="DEBUG">
+    <Appenders>
+        <!--
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss,SSS} %-5level %logger{36}: %msg%n" />
+        </Console>
+        -->
+
+        <!-- RollingFileAppender для ротации логов -->
+        <RollingFile name="FileLogger" fileName="com/libraryquest/logs/application.log"
+                     filePattern="com/libraryquest/logs/application-%d{yyyy-MM-dd}.log">
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss,SSS} %-5level %logger{36}: %msg%n</Pattern>
+            </PatternLayout>
+
+            <Policies>
+                <!-- Политика ротации по времени: ежедневно -->
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+            </Policies>
+
+            <DefaultRolloverStrategy max="7">
+                <!-- Удаление логов старше 7 дней -->
+                <Delete basePath="com/libraryquest/logs" maxDepth="1">
+                    <IfFileName glob="application-*.log" />
+                    <IfLastModified age="7d" />
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <!-- Основной логгер для всех классов -->
+        <Root level="info">
+            <AppenderRef ref="FileLogger" />
+        </Root>
+    </Loggers>
+</Configuration>

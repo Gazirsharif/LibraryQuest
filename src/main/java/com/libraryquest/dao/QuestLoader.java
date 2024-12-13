@@ -2,6 +2,8 @@ package com.libraryquest.dao;
 
 import com.libraryquest.models.Quest;
 import com.libraryquest.models.Step;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -13,12 +15,24 @@ import java.util.Map;
  */
 public class QuestLoader {
 
+    private static final Logger logger = LogManager.getLogger(QuestLoader.class);
+
     /**
      * Получение квеста по ID
      */
     public static Quest getQuestById(int questId) {
+        logger.debug("Получение квеста с ID: {}", questId);
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return session.get(Quest.class, questId);
+            Quest quest = session.get(Quest.class, questId);
+            if (quest != null) {
+                logger.info("Квест с ID {} успешно загружен", questId);
+            } else {
+                logger.warn("Квест с ID {} не найден", questId);
+            }
+            return quest;
+        } catch (Exception e) {
+            logger.error("Ошибка при получении квеста с ID {}", questId, e);
+            return null;
         }
     }
 
@@ -26,8 +40,18 @@ public class QuestLoader {
      * Получение шага по ID
      */
     public static Step getStepById(int stepId) {
+        logger.debug("Получение шага с ID: {}", stepId);
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return session.get(Step.class, stepId);
+            Step step = session.get(Step.class, stepId);
+            if (step != null) {
+                logger.info("Шаг с ID {} успешно загружен", stepId);
+            } else {
+                logger.warn("Шаг с ID {} не найден", stepId);
+            }
+            return step;
+        } catch (Exception e) {
+            logger.error("Ошибка при получении шага с ID {}", stepId, e);
+            return null;
         }
     }
 
@@ -35,8 +59,14 @@ public class QuestLoader {
      * Получение всех квестов
      */
     public static List<Quest> getAllQuests() {
+        logger.debug("Получение всех квестов");
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return session.createQuery("FROM Quest", Quest.class).list();
+            List<Quest> quests = session.createQuery("FROM Quest", Quest.class).list();
+            logger.info("Успешно загружено {} квестов", quests.size());
+            return quests;
+        } catch (Exception e) {
+            logger.error("Ошибка при получении всех квестов", e);
+            return List.of();
         }
     }
 
@@ -44,22 +74,31 @@ public class QuestLoader {
      * Получение конкретного шага по ID квеста и ID шага
      */
     public static Step getStepContent(int questId, int stepId) {
+        logger.debug("Получение шага с ID {} из квеста с ID {}", stepId, questId);
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
 
             Quest quest = getQuestById(questId);
             if (quest != null) {
-                return quest.getSteps().stream()
-                        .filter(step -> step.getStepId() == stepId)
+                Step step = quest.getSteps().stream()
+                        .filter(s -> s.getStepId() == stepId)
                         .findFirst()
                         .orElse(null);
+                if (step != null) {
+                    logger.info("Шаг с ID {} из квеста с ID {} успешно загружен", stepId, questId);
+                } else {
+                    logger.warn("Шаг с ID {} в квесте с ID {} не найден", stepId, questId);
+                }
+                transaction.commit();
+                return step;
+            } else {
+                logger.warn("Квест с ID {} не найден при попытке загрузить шаг с ID {}", questId, stepId);
             }
 
-            transaction.commit();
         } catch (Exception e) {
             if (transaction != null) transaction.rollback();
-            e.printStackTrace();
+            logger.error("Ошибка при получении шага с ID {} из квеста с ID {}", stepId, questId, e);
         }
 
         return null;
@@ -69,6 +108,7 @@ public class QuestLoader {
      * Сохранение нового квеста или обновление существующего
      */
     public static void saveQuest(Quest quest) {
+        logger.debug("Сохранение квеста с ID {}", quest.getQuestId());
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
@@ -77,32 +117,33 @@ public class QuestLoader {
             }
             session.saveOrUpdate(quest); // Hibernate сам обновит связанные шаги
             transaction.commit();
+            logger.info("Квест с ID {} успешно сохранен", quest.getQuestId());
         } catch (Exception e) {
             if (transaction != null) transaction.rollback();
-            e.printStackTrace();
+            logger.error("Ошибка при сохранении квеста с ID {}", quest.getQuestId(), e);
         }
     }
 
     public static void updateStep(Step step) {
+        logger.debug("Обновление шага с ID {}", step.getStepId());
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
 
-            // Загрузить текущий шаг из базы данных
             Step existingStep = session.get(Step.class, step.getStepId());
             if (existingStep != null) {
-                // Обновить данные шага
                 existingStep.setQuestion(step.getQuestion());
                 existingStep.setOptions(step.getOptions());
-
-                // Сохранить изменения
                 session.update(existingStep);
+                logger.info("Шаг с ID {} успешно обновлен", step.getStepId());
+            } else {
+                logger.warn("Шаг с ID {} не найден для обновления", step.getStepId());
             }
 
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null) transaction.rollback();
-            e.printStackTrace();
+            logger.error("Ошибка при обновлении шага с ID {}", step.getStepId(), e);
         }
     }
 
@@ -110,47 +151,52 @@ public class QuestLoader {
      * Удаление квеста по ID
      */
     public static void deleteQuest(Quest questDelete) {
+        logger.debug("Удаление квеста с ID {}", questDelete.getQuestId());
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
             Quest quest = session.get(Quest.class, questDelete.getQuestId());
             if (quest != null) {
                 session.remove(quest);
+                logger.info("Квест с ID {} успешно удален", questDelete.getQuestId());
+            } else {
+                logger.warn("Квест с ID {} не найден для удаления", questDelete.getQuestId());
             }
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null) transaction.rollback();
-            e.printStackTrace();
+            logger.error("Ошибка при удалении квеста с ID {}", questDelete.getQuestId(), e);
         }
     }
 
     public static void deleteStepById(int questId, int stepId) {
+        logger.debug("Удаление шага с ID {} из квеста с ID {}", stepId, questId);
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
 
-            // Найти квест
             Quest quest = session.get(Quest.class, questId);
             if (quest != null) {
-                // Найти шаг внутри квеста
                 Step stepToDelete = quest.getSteps().stream()
                         .filter(step -> step.getStepId() == stepId)
                         .findFirst()
                         .orElse(null);
 
                 if (stepToDelete != null) {
-                    // Удалить шаг из списка шагов квеста
                     quest.getSteps().remove(stepToDelete);
-
-                    // Удалить шаг из базы данных
                     session.remove(stepToDelete);
+                    logger.info("Шаг с ID {} успешно удален из квеста с ID {}", stepId, questId);
+                } else {
+                    logger.warn("Шаг с ID {} не найден в квесте с ID {} для удаления", stepId, questId);
                 }
+            } else {
+                logger.warn("Квест с ID {} не найден для удаления шага с ID {}", questId, stepId);
             }
 
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null) transaction.rollback();
-            e.printStackTrace();
+            logger.error("Ошибка при удалении шага с ID {} из квеста с ID {}", stepId, questId, e);
         }
     }
 
@@ -158,8 +204,12 @@ public class QuestLoader {
      * Проверяет, есть ли данные в базе, и загружает начальные данные, если нужно
      */
     public static void initializeData() {
+        logger.debug("Инициализация данных квестов");
         if (getAllQuests().isEmpty()) {
+            logger.info("Данные отсутствуют. Загружаются данные по умолчанию.");
             loadDefaultQuests();
+        } else {
+            logger.info("Данные уже существуют. Инициализация не требуется.");
         }
     }
 
@@ -167,6 +217,7 @@ public class QuestLoader {
      * Загружает данные по умолчанию
      */
     private static void loadDefaultQuests() {
+        logger.debug("Загрузка данных по умолчанию");
         Quest quest = new Quest();
         quest.setTitle("Красная Шапочка");
         quest.setDescription("Классический квест про девочку и волка");
@@ -198,5 +249,6 @@ public class QuestLoader {
 
         quest.setSteps(List.of(step1, step2, step3, step4, step5, step6, step7, step8));
         saveQuest(quest);
+        logger.info("Данные по умолчанию успешно загружены");
     }
 }

@@ -37,6 +37,14 @@ public class StepServlet extends HttpServlet {
             int questId = Integer.parseInt(pathParts[0]);
             int stepId = Integer.parseInt(pathParts[1]);
 
+            if (stepId == -2) {
+                // Передача данных в JSP для отображения
+                req.getRequestDispatcher("/jsp/lose.jsp").forward(req, resp);
+            } else if (stepId == -3) {
+                // Передача данных в JSP для отображения
+                req.getRequestDispatcher("/jsp/win.jsp").forward(req, resp);
+            }
+
             // Получение текущего шага
             Step step = QuestService.getStepContent(questId, stepId);
 

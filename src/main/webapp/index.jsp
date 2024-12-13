@@ -63,6 +63,10 @@
         <h1>Добро пожаловать в LibraryQuest!</h1>
     </header>
     <main>
+        <c:if test="${not empty username}">
+            <p>Добро пожаловать, ${username}!</p>
+        </c:if>
+
         <p>Это интерактивная библиотека текстовых квестов. Выберите квест из списка или создайте свой!</p>
         <a href="${pageContext.request.contextPath}/questEdit">Перейти к списку квестов</a>
     </main>

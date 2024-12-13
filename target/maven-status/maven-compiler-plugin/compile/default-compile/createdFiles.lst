@@ -1,2 +1,11 @@
 com\libraryquest\servlets\QuestCRUDServlet.class
+com\libraryquest\servlets\StepEditor.class
+com\libraryquest\models\Quest.class
+com\libraryquest\dao\QuestLoader.class
 com\libraryquest\servlets\QuestEditor.class
+com\libraryquest\dao\HibernateUtil.class
+com\libraryquest\servlets\StepServlet.class
+com\libraryquest\models\Step.class
+com\libraryquest\models\StepOption.class
+com\libraryquest\services\QuestService.class
+com\libraryquest\servlets\QuestServlet.class
