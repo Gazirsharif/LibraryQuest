@@ -2,10 +2,12 @@ package com.libraryquest.dao;
 
 import com.libraryquest.models.Quest;
 import com.libraryquest.models.Step;
+import com.libraryquest.models.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
 import java.util.List;
 import java.util.Map;
@@ -199,6 +201,69 @@ public class QuestLoader {
             logger.error("Ошибка при удалении шага с ID {} из квеста с ID {}", stepId, questId, e);
         }
     }
+
+    public static User findUserByUsername(String username) {
+        logger.debug("Поиск пользователя по имени: {}", username);
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+
+            Query<User> query = session.createQuery("FROM User WHERE username = :username", User.class);
+            query.setParameter("username", username);
+            User user = query.uniqueResult();
+            if (user != null) {
+                logger.info("Пользователь найден: {}", username);
+            } else {
+                logger.info("Пользователь не найден: {}", username);
+            }
+            return user;
+
+        } catch (Exception e) {
+            logger.error("Ошибка при поиске пользователя по имени", e);
+            return null;
+        }
+    }
+
+    public static void saveUser(User user) {
+        logger.debug("Сохранение пользователя: {}", user.getUsername());
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+
+            session.save(user);
+
+            transaction.commit();
+            logger.info("Пользователь успешно сохранен: {}", user.getUsername());
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            logger.error("Ошибка при сохранении пользователя", e);
+        }
+    }
+
+//    public void updateStats(int userId, int questId, boolean isWin) {
+//        logger.debug("Обновление статистики для пользователя с ID: {}", userId);
+//        Transaction transaction = null;
+//        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+//            transaction = session.beginTransaction();
+//
+//            User user = session.get(User.class, userId);
+//            if (user != null) {
+//                if (isWin) {
+//                    //TODO: Реализовать работу с Score
+//                } else {
+//                    //TODO: Реализовать работу с Score
+//                }
+//
+//                session.update(user);
+//
+//                transaction.commit();
+//                logger.info("Статистика успешно обновлена для пользователя с ID: {}", userId);
+//            } else {
+//                logger.warn("Пользователь с ID {} не найден для обновления статистики", userId);
+//            }
+//        } catch (Exception e) {
+//            if (transaction != null) transaction.rollback();
+//            logger.error("Ошибка при обновлении статистики пользователя", e);
+//        }
+//    }
 
     /**
      * Проверяет, есть ли данные в базе, и загружает начальные данные, если нужно

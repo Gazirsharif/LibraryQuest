@@ -40,7 +40,9 @@
 <body>
     <h1>Поздравляем, вы победили!</h1>
     <p>Вы успешно завершили квест.</p>
+
     <img src="${pageContext.request.contextPath}/images/win.png" alt="Поздравление" class="centered-image">
+
     <a href="${pageContext.request.contextPath}/questEdit">Вернуться к списку квестов</a>
 </body>
 </html>

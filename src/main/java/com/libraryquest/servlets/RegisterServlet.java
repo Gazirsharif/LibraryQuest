@@ -11,15 +11,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/login")
-public class LoginServlet extends HttpServlet {
+@WebServlet("/register")
+public class RegisterServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
         resp.setContentType("text/html; charset=UTF-8");
 
-        req.getRequestDispatcher("/jsp/login.jsp").forward(req, resp);
+        req.getRequestDispatcher("/jsp/register.jsp").forward(req, resp);
     }
 
     @Override
@@ -31,14 +31,14 @@ public class LoginServlet extends HttpServlet {
         String username = req.getParameter("username");
         String password = req.getParameter("password");
 
-        User user = QuestService.findUserByUsername(username);
-        if (user != null && BCrypt.checkpw(password, user.getPassword())) {
-            req.getSession().setAttribute("user", user);
-            resp.sendRedirect(req.getContextPath() + "/index.jsp");
-        } else {
-            // Failed login, send error message back to login page
-            req.setAttribute("error", "Invalid username or password");
-            req.getRequestDispatcher("/jsp/login.jsp").forward(req, resp);
-        }
+        // Хэшируем пароль
+        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(hashedPassword);
+
+        QuestService.saveUser(user);
+        resp.sendRedirect(req.getContextPath() + "/login");
     }
 }

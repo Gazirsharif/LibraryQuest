@@ -14,6 +14,15 @@
         h1 {
             color: #dc3545;
         }
+        img.centered-image {
+            max-width: 80%;
+            height: auto;
+            display: block;
+            margin: 20px auto;
+            border: 5px solid #dc3545;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
         a {
             display: inline-block;
             margin-top: 20px;
@@ -31,6 +40,7 @@
 <body>
     <h1>К сожалению, вы проиграли</h1>
     <p>Попробуйте еще раз и добейтесь успеха!</p>
+    <img src="${pageContext.request.contextPath}/images/lose.jpg" alt="Проигрыш" class="centered-image">
     <a href="${pageContext.request.contextPath}/questEdit">Вернуться к списку квестов</a>
 </body>
 </html>

@@ -20,5 +20,7 @@
         <!-- Entity mappings -->
         <mapping class="com.libraryquest.models.Quest" />
         <mapping class="com.libraryquest.models.Step" />
+        <mapping class="com.libraryquest.models.User" />
+        <mapping class="com.libraryquest.models.Score" />
     </session-factory>
 </hibernate-configuration>

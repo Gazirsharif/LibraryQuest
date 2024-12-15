@@ -3,6 +3,7 @@ package com.libraryquest.services;
 import com.libraryquest.dao.QuestLoader;
 import com.libraryquest.models.Quest;
 import com.libraryquest.models.Step;
+import com.libraryquest.models.User;
 
 import java.util.List;
 
@@ -46,12 +47,21 @@ public class QuestService {
         return QuestLoader.getStepById(stepId);
     }
 
+    public static User findUserByUsername(String username) {
+        return QuestLoader.findUserByUsername(username);
+    }
+
+    public static void saveUser(User user) {
+        QuestLoader.saveUser(user);
+    }
+
+
     // Дополнительные методы логики
-    public void markQuestAsCompleted(int questId) {
+    public void markQuestAsCompleted(int questId, int userId) {
         // Логика завершения квеста
     }
 
-    public void resetQuestProgress(int questId) {
+    public void resetQuestProgress(int questId, int userId) {
         // Логика сброса прогресса
     }
 }

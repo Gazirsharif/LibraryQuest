@@ -3,16 +3,16 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Вы победили!</title>
+    <title>Вы проиграли</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            background-color: #f0fff0;
+            background-color: #fff0f0;
             color: #333;
         }
         h1 {
-            color: #28a745;
+            color: #dc3545;
         }
         img.centered-image {
             max-width: 80%;
@@ -38,9 +38,9 @@
     </style>
 </head>
 <body>
-    <h1>Поздравляем, вы победили!</h1>
-    <p>Вы успешно завершили квест.</p>
-    <img src="${pageContext.request.contextPath}/images/win.png" alt="Поздравление" class="centered-image">
+    <h1>К сожалению, вы проиграли</h1>
+    <p>Попробуйте еще раз и добейтесь успеха!</p>
+    <img src="${pageContext.request.contextPath}/images/lose.jpg" alt="Проигрыш">
     <a href="${pageContext.request.contextPath}/questEdit">Вернуться к списку квестов</a>
 </body>
 </html>

@@ -120,6 +120,13 @@
             <version>2.10</version>
         </dependency>
 
+        <!-- Crypt -->
+        <dependency>
+            <groupId>org.mindrot</groupId>
+            <artifactId>jbcrypt</artifactId>
+            <version>0.4</version>
+        </dependency>
+
 
     </dependencies>
 
