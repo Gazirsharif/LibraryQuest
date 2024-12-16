@@ -34,9 +34,7 @@ public class RegisterServlet extends HttpServlet {
         // Хэшируем пароль
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
 
-        User user = new User();
-        user.setUsername(username);
-        user.setPassword(hashedPassword);
+        User user = new User(username, hashedPassword);
 
         QuestService.saveUser(user);
         resp.sendRedirect(req.getContextPath() + "/login");

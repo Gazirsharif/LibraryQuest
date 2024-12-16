@@ -1,19 +1,18 @@
 package com.libraryquest.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
+@IdClass(CompositeKey.class)
 @Entity
 public class Score {
     @Id
     int questId;
+    @Id
+    int userId;
     @Column
     String questTitle;
-    @Column
-    int userId;
     @Column
     String userName;
     @Column

@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @WebServlet("/login")
@@ -33,6 +34,12 @@ public class LoginServlet extends HttpServlet {
 
         User user = QuestService.findUserByUsername(username);
         if (user != null && BCrypt.checkpw(password, user.getPassword())) {
+            // Завершаем текущую сессию
+            HttpSession oldSession = req.getSession(false);
+            if (oldSession != null) {
+                oldSession.invalidate(); // Удаляет текущую сессию и все ее данные
+            }
+
             req.getSession().setAttribute("user", user);
             resp.sendRedirect(req.getContextPath() + "/index.jsp");
         } else {

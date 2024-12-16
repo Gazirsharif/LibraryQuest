@@ -1,9 +1,10 @@
 package com.libraryquest.services;
 
+import com.libraryquest.dao.HibernateUtil;
 import com.libraryquest.dao.QuestLoader;
-import com.libraryquest.models.Quest;
-import com.libraryquest.models.Step;
-import com.libraryquest.models.User;
+import com.libraryquest.models.*;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import java.util.List;
 
@@ -26,6 +27,10 @@ public class QuestService {
     public static List<Quest> getAllQuests() {
         return QuestLoader.getAllQuests();
     }
+    public static List<Score> getAllScores() {
+        return QuestLoader.getAllScores();
+    }
+
 
     public static void deleteQuest(Quest quest) {
         QuestLoader.deleteQuest(quest);
@@ -53,6 +58,14 @@ public class QuestService {
 
     public static void saveUser(User user) {
         QuestLoader.saveUser(user);
+    }
+
+    public static void updateScoreOnWin(int questId, String userName) {
+        QuestLoader.updateScoreOnWin(questId, userName);
+    }
+
+    public static void updateScoreOnLose(int questId, String userName) {
+        QuestLoader.updateScoreOnLose(questId, userName);
     }
 
 

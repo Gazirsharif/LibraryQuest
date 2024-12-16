@@ -2,12 +2,15 @@ package com.libraryquest.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * Класс, представляющий пользователя
  */
 @Data
 @Entity
+@Cache(usage = CacheConcurrencyStrategy.NONE)
 @Table(name = "users")
 public class User {
     @Id

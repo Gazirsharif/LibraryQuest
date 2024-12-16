@@ -104,7 +104,8 @@
 
     <div style="text-align:center; margin: 20px;">
         <a href="${pageContext.request.contextPath}">Перейти к начальной странице</a> |
-        <a href="${pageContext.request.contextPath}/questEdit">Перейти к списку квестов</a>
+        <a href="${pageContext.request.contextPath}/questEdit">Перейти к списку квестов</a> |
+        <a href="${pageContext.request.contextPath}/score">Перейти к общему счету</a>
     </div>
 
     <table border="1">

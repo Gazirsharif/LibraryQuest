@@ -2,6 +2,7 @@ package com.libraryquest.servlets;
 
 import com.libraryquest.models.Quest;
 import com.libraryquest.models.Step;
+import com.libraryquest.models.User;
 import com.libraryquest.services.QuestService;
 
 import javax.servlet.ServletException;
@@ -9,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
@@ -37,12 +39,32 @@ public class StepServlet extends HttpServlet {
             int questId = Integer.parseInt(pathParts[0]);
             int stepId = Integer.parseInt(pathParts[1]);
 
+            // Создаем новую сессию для нового пользователя
+            HttpSession session = req.getSession(true);
+            if (session == null) {
+                resp.sendRedirect(req.getContextPath() + "/login");
+                return;
+            }
+
+            // Получаем имя пользователя из сессии
+            User user = (User) session.getAttribute("user");
+            String username = user.getUsername();
+
+            if (username == null) {
+                resp.sendRedirect(req.getContextPath() + "/login");
+                return;
+            }
+
             if (stepId == -2) {
-                // Передача данных в JSP для отображения
+                // Логика для проигрыша
+                QuestService.updateScoreOnLose(questId, username);
                 req.getRequestDispatcher("/jsp/lose.jsp").forward(req, resp);
+                return;
             } else if (stepId == -3) {
-                // Передача данных в JSP для отображения
+                // Логика для выигрыша
+                QuestService.updateScoreOnWin(questId, username);
                 req.getRequestDispatcher("/jsp/win.jsp").forward(req, resp);
+                return;
             }
 
             // Получение текущего шага

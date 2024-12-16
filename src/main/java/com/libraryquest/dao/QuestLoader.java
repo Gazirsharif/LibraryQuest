@@ -1,11 +1,11 @@
 package com.libraryquest.dao;
 
-import com.libraryquest.models.Quest;
-import com.libraryquest.models.Step;
-import com.libraryquest.models.User;
+import com.libraryquest.models.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.Cache;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
@@ -68,6 +68,18 @@ public class QuestLoader {
             return quests;
         } catch (Exception e) {
             logger.error("Ошибка при получении всех квестов", e);
+            return List.of();
+        }
+    }
+
+    public static List<Score> getAllScores() {
+        logger.debug("Получение всех квестов");
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            List<Score> scores = session.createQuery("FROM Score", Score.class).list();
+            logger.info("Успешно загружено {} счетов", scores.size());
+            return scores;
+        } catch (Exception e) {
+            logger.error("Ошибка при получении всех счетов", e);
             return List.of();
         }
     }
@@ -136,7 +148,7 @@ public class QuestLoader {
             if (existingStep != null) {
                 existingStep.setQuestion(step.getQuestion());
                 existingStep.setOptions(step.getOptions());
-                session.update(existingStep);
+                session.merge(existingStep);
                 logger.info("Шаг с ID {} успешно обновлен", step.getStepId());
             } else {
                 logger.warn("Шаг с ID {} не найден для обновления", step.getStepId());
@@ -206,10 +218,15 @@ public class QuestLoader {
         logger.debug("Поиск пользователя по имени: {}", username);
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
 
+            // Очистка кэша перед запросом
+            HibernateUtil.getSessionFactory().getCache().evictAllRegions();
+
             Query<User> query = session.createQuery("FROM User WHERE username = :username", User.class);
             query.setParameter("username", username);
             User user = query.uniqueResult();
+
             if (user != null) {
+                session.refresh(user); // Синхронизирует сущность с базой данных
                 logger.info("Пользователь найден: {}", username);
             } else {
                 logger.info("Пользователь не найден: {}", username);
@@ -228,7 +245,7 @@ public class QuestLoader {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
 
-            session.save(user);
+            session.persist(user);
 
             transaction.commit();
             logger.info("Пользователь успешно сохранен: {}", user.getUsername());
@@ -238,32 +255,83 @@ public class QuestLoader {
         }
     }
 
-//    public void updateStats(int userId, int questId, boolean isWin) {
-//        logger.debug("Обновление статистики для пользователя с ID: {}", userId);
-//        Transaction transaction = null;
-//        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-//            transaction = session.beginTransaction();
-//
-//            User user = session.get(User.class, userId);
-//            if (user != null) {
-//                if (isWin) {
-//                    //TODO: Реализовать работу с Score
-//                } else {
-//                    //TODO: Реализовать работу с Score
-//                }
-//
-//                session.update(user);
-//
-//                transaction.commit();
-//                logger.info("Статистика успешно обновлена для пользователя с ID: {}", userId);
-//            } else {
-//                logger.warn("Пользователь с ID {} не найден для обновления статистики", userId);
-//            }
-//        } catch (Exception e) {
-//            if (transaction != null) transaction.rollback();
-//            logger.error("Ошибка при обновлении статистики пользователя", e);
-//        }
-//    }
+    /**
+     * Обновление счёта (победы или поражения) для пользователя и квеста
+     *
+     * @param questId  ID квеста
+     * @param username Имя пользователя
+     * @param isWin    Флаг победы (true - победа, false - поражение)
+     */
+    public static void updateScore(int questId, String username, boolean isWin) {
+        String action = isWin ? "победу" : "поражение";
+        logger.debug("Обновление счёта на {} для квеста ID {} и пользователя Username {}", action, questId, username);
+
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+
+            // Поиск пользователя
+            Query<User> userQuery = session.createQuery("FROM User WHERE username = :username", User.class);
+            userQuery.setParameter("username", username);
+            User user = userQuery.uniqueResult();
+            if (user == null) {
+                throw new IllegalArgumentException("Пользователь с именем " + username + " не найден.");
+            }
+
+            // Поиск квеста
+            Quest quest = getQuestById(questId);
+            if (quest == null) {
+                throw new IllegalArgumentException("Квест с ID " + questId + " не найден.");
+            }
+
+            int userId = user.getUserId();
+            String questTitle = quest.getTitle();
+
+            // Проверка существования записи Score
+            Score score = session.get(Score.class, new CompositeKey(questId, userId));
+            if (score == null) {
+                // Создаем новую запись
+                score = new Score();
+                score.setQuestId(questId);
+                score.setUserId(userId);
+                score.setQuestTitle(questTitle);
+                score.setUserName(username);
+                score.setWin(isWin ? 1 : 0);
+                score.setLose(isWin ? 0 : 1);
+                session.persist(score);
+                logger.info("Создана новая запись счёта на {} для квеста ID {} и пользователя Username {}", action, questId, username);
+            } else {
+                // Обновляем существующую запись
+                if (isWin) {
+                    score.setWin(score.getWin() + 1);
+                } else {
+                    score.setLose(score.getLose() + 1);
+                }
+                session.merge(score); // Используем merge для создания/обновления
+                logger.info("Обновлён счётчик на {} для квеста ID {} и пользователя Username {}", action, questId, username);
+            }
+
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            e.printStackTrace();
+            logger.error("Ошибка при обновлении счёта на {} для квеста ID {} и пользователя Username {}", action, questId, username, e);
+        }
+    }
+
+    /**
+     * Обновление счёта в случае победы
+     */
+    public static void updateScoreOnWin(int questId, String username) {
+        updateScore(questId, username, true);
+    }
+
+    /**
+     * Обновление счёта в случае проигрыша
+     */
+    public static void updateScoreOnLose(int questId, String username) {
+        updateScore(questId, username, false);
+    }
 
     /**
      * Проверяет, есть ли данные в базе, и загружает начальные данные, если нужно

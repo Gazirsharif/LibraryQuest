@@ -17,7 +17,9 @@ public class Quest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int questId;
 
+    @Column(unique = true, nullable = false)
     private String title;
+    @Column(nullable = false)
     private String description;
 
     @OneToMany(mappedBy = "quest", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
