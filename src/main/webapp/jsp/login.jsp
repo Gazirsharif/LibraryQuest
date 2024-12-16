@@ -6,12 +6,14 @@
     <title>Вход в LibraryQuest</title>
     <link href="css/styles.css" rel="stylesheet">
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-        <script src="<c:url value=" /static/jquery-3.6.0.min.js" />"></script>
-
 </head>
 <body>
     <div class="container">
         <h1>Вход в LibraryQuest</h1>
+
+        <c:if test="${not empty param.logoutMessage}">
+            <p class="success-message">${param.logoutMessage}</p>
+        </c:if>
 
         <form method="post" action="${pageContext.request.contextPath}/login">
             <label for="username">Имя пользователя:</label>

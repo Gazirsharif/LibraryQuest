@@ -61,6 +61,11 @@
                 background-color: #f1f1f1;
             }
 
+            p {
+                font-size: 1.2rem;
+                margin: 20px 0;
+            }
+
             a {
                 color: #007bff;
                 text-decoration: none;
@@ -124,6 +129,18 @@
             <a href="${pageContext.request.contextPath}/score">Перейти к общему счету</a>
         </div>
 
+        <div style="text-align:center; margin: 20px;">
+            <p>Возможные действия на странице:</p>
+            <ul style="text-align: left; margin: 20px auto; max-width: 600px;">
+                <li>Начать квест: Нажмите на название квеста в списке, вас перекинет на страницу квеста.</li>
+                <li>Создать квест: Воспользуйтесь редактором для создания собственного сюжета.</li>
+                <li>Продолжить начатое: Вернитесь к квестам или шагам которые вы уже начали, редактируйте,
+                 добавляйте и удаляйте в любое удобное время</li>
+            </ul>
+        </div>
+
+
+
         <button onclick="showAddForm()">Добавить квест</button>
 
         <table>
@@ -140,7 +157,7 @@
                     <td><a href="${pageContext.request.contextPath}/quest/${quest.questId}">${quest.title}</a></td>
                     <td>${quest.description}</td>
                     <td>
-                        <c:forEach var="step" items="${questSteps[quest]}">
+                        <c:forEach var="step" items="${questSteps[quest.questId]}">
                             ${step.question} (${step.options.size()} опций)<br>
                         </c:forEach>
                     </td>
@@ -170,7 +187,7 @@
             <label>Шаги:</label>
             <div id="steps-container">
                 <c:if test="${quest != null && quest.steps != null}">
-                    <c:forEach var="step" items="${quest.steps}">
+                    <c:forEach var="step" items="${steps}">
                         <div class="step-item">
                             <input type="hidden" name="stepIds" value="${step.stepId}">
                             <input type="text" name="steps" value="${step.question}" required>

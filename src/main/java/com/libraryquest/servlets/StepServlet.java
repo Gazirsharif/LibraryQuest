@@ -84,7 +84,6 @@ public class StepServlet extends HttpServlet {
             // Передача данных в JSP для отображения
             req.getRequestDispatcher("/jsp/step.jsp").forward(req, resp);
         } catch (NumberFormatException e) {
-//            System.err.println("Некорректный формат чисел в маршруте: " + Arrays.toString(pathParts));
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Идентификаторы должны быть числовыми");
         }
     }

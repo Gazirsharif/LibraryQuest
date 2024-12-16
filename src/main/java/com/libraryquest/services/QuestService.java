@@ -1,10 +1,10 @@
 package com.libraryquest.services;
 
-import com.libraryquest.dao.HibernateUtil;
 import com.libraryquest.dao.QuestLoader;
-import com.libraryquest.models.*;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
+import com.libraryquest.models.Quest;
+import com.libraryquest.models.Score;
+import com.libraryquest.models.Step;
+import com.libraryquest.models.User;
 
 import java.util.List;
 
@@ -27,10 +27,10 @@ public class QuestService {
     public static List<Quest> getAllQuests() {
         return QuestLoader.getAllQuests();
     }
+
     public static List<Score> getAllScores() {
         return QuestLoader.getAllScores();
     }
-
 
     public static void deleteQuest(Quest quest) {
         QuestLoader.deleteQuest(quest);
@@ -66,15 +66,5 @@ public class QuestService {
 
     public static void updateScoreOnLose(int questId, String userName) {
         QuestLoader.updateScoreOnLose(questId, userName);
-    }
-
-
-    // Дополнительные методы логики
-    public void markQuestAsCompleted(int questId, int userId) {
-        // Логика завершения квеста
-    }
-
-    public void resetQuestProgress(int questId, int userId) {
-        // Логика сброса прогресса
     }
 }

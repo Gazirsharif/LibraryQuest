@@ -1,0 +1,20 @@
+-------------------------------------------------------------------------------
+Test set: com.libraryquest.servlets.StepEditorTest
+-------------------------------------------------------------------------------
+Tests run: 4, Failures: 4, Errors: 0, Skipped: 0, Time elapsed: 0.005 sec <<< FAILURE!
+com.libraryquest.servlets.StepEditorTest.testDoGetWithEditAction()  Time elapsed: 0.002 sec  <<< FAILURE!
+java.lang.NullPointerException: Cannot invoke "javax.servlet.http.HttpServletRequest.getParameter(String)" because "this.request" is null
+	at com.libraryquest.servlets.StepEditorTest.testDoGetWithEditAction(StepEditorTest.java:45)
+
+com.libraryquest.servlets.StepEditorTest.testDoPostAddAction()  Time elapsed: 0 sec  <<< FAILURE!
+java.lang.NullPointerException: Cannot invoke "javax.servlet.http.HttpServletRequest.getParameter(String)" because "this.request" is null
+	at com.libraryquest.servlets.StepEditorTest.testDoPostAddAction(StepEditorTest.java:71)
+
+com.libraryquest.servlets.StepEditorTest.testDoPostDeleteAction()  Time elapsed: 0 sec  <<< FAILURE!
+java.lang.NullPointerException: Cannot invoke "javax.servlet.http.HttpServletRequest.getParameter(String)" because "this.request" is null
+	at com.libraryquest.servlets.StepEditorTest.testDoPostDeleteAction(StepEditorTest.java:91)
+
+com.libraryquest.servlets.StepEditorTest.testDoPostUpdateAction()  Time elapsed: 0 sec  <<< FAILURE!
+java.lang.NullPointerException: Cannot invoke "javax.servlet.http.HttpServletRequest.getParameter(String)" because "this.request" is null
+	at com.libraryquest.servlets.StepEditorTest.testDoPostUpdateAction(StepEditorTest.java:112)
+

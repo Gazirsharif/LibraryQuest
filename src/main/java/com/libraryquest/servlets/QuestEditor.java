@@ -38,9 +38,13 @@ public class QuestEditor extends HttpServlet {
         if ("edit".equals(action)) {
             int questId = Integer.parseInt(req.getParameter("id"));
             Quest quest = QuestService.getQuestById(questId);
+
+            // Получаем шаги для редактируемого квеста
+            Set<Step> steps = new LinkedHashSet<>(quest.getSteps());
+            req.setAttribute("steps", steps); // Добавляем шаги
             req.setAttribute("quest", quest);
             req.getRequestDispatcher("/jsp/QuestEdit.jsp").forward(req, resp);
-            return; //TODO: Что меняет?
+            return;
         } else if ("delete".equals(action)) {
             int questId = Integer.parseInt(req.getParameter("id"));
             Quest quest = QuestService.getQuestById(questId);
@@ -51,9 +55,9 @@ public class QuestEditor extends HttpServlet {
 
         List<Quest> quests = QuestService.getAllQuests();
 
-        Map<Quest, Set<Step>> questSteps = quests
+        Map<Integer, Set<Step>> questSteps = quests
                 .stream()
-                .collect(Collectors.toMap(quest -> quest,
+                .collect(Collectors.toMap(Quest::getQuestId, // Используем идентификатор в качестве ключа
                         quest -> new LinkedHashSet<>(quest.getSteps())));
 
         req.setAttribute("questSteps", questSteps);
@@ -89,7 +93,6 @@ public class QuestEditor extends HttpServlet {
 
             // Удаление шагов
             String deletedStepsParam = req.getParameter("deletedSteps");
-//            System.out.println("Удалённые шаги: " + deletedStepsParam);
 
             if (deletedStepsParam != null && !deletedStepsParam.isEmpty()) {
                 String[] deletedStepIds = deletedStepsParam.split(",");

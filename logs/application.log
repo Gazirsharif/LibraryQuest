@@ -1,0 +1,44 @@
+2024-12-17 01:46:09.962 [http-nio-8080-exec-4] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.2.0.Final
+2024-12-17 01:46:09.997 [http-nio-8080-exec-4] INFO  org.hibernate.cfg.Environment - HHH000406: Using bytecode reflection optimizer
+2024-12-17 01:46:10.161 [http-nio-8080-exec-4] WARN  org.hibernate.orm.deprecation - HHH90000012: Recognized obsolete hibernate namespace http://hibernate.sourceforge.net/hibernate-configuration. Use namespace http://www.hibernate.org/dtd/hibernate-configuration instead.  Support for obsolete DTD/XSD namespaces may be removed at any time.
+2024-12-17 01:46:11.711 [http-nio-8080-exec-4] WARN  org.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2024-12-17 01:46:11.727 [http-nio-8080-exec-4] INFO  org.hibernate.orm.connections.pooling - HHH10001005: Loaded JDBC driver class: com.mysql.cj.jdbc.Driver
+2024-12-17 01:46:11.727 [http-nio-8080-exec-4] INFO  org.hibernate.orm.connections.pooling - HHH10001012: Connecting with JDBC URL [jdbc:mysql://localhost:3306/library_quest?useUnicode=true&characterEncoding=UTF-8]
+2024-12-17 01:46:11.727 [http-nio-8080-exec-4] INFO  org.hibernate.orm.connections.pooling - HHH10001001: Connection properties: {password=****, user=root}
+2024-12-17 01:46:11.727 [http-nio-8080-exec-4] INFO  org.hibernate.orm.connections.pooling - HHH10001003: Autocommit mode: false
+2024-12-17 01:46:11.740 [http-nio-8080-exec-4] INFO  org.hibernate.orm.connections.pooling - HHH10001115: Connection pool size: 20 (min=1)
+2024-12-17 01:46:12.641 [http-nio-8080-exec-4] INFO  SQL dialect - HHH000400: Using dialect: org.hibernate.dialect.MySQLDialect
+2024-12-17 01:46:13.990 [http-nio-8080-exec-4] INFO  org.hibernate.bytecode.internal.BytecodeProviderInitiator - HHH000021: Bytecode provider name : bytebuddy
+2024-12-17 01:46:17.928 [http-nio-8080-exec-4] INFO  org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2024-12-17 01:46:18.069 [http-nio-8080-exec-4] INFO  org.hibernate.orm.connections.access - HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@29cdad9] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+2024-12-17 01:46:19.867 [http-nio-8080-exec-4] INFO  com.libraryquest.dao.QuestLoader - Пользователь найден: nadir
+2024-12-17 01:46:23.050 [http-nio-8080-exec-6] INFO  com.libraryquest.dao.QuestLoader - Успешно загружено 8 квестов
+2024-12-17 01:46:38.995 [http-nio-8080-exec-10] INFO  com.libraryquest.dao.QuestLoader - Квест с ID 36 успешно загружен
+2024-12-17 01:46:39.000 [http-nio-8080-exec-10] INFO  com.libraryquest.dao.QuestLoader - Квест с ID 36 успешно загружен
+2024-12-17 01:46:46.448 [http-nio-8080-exec-3] INFO  com.libraryquest.dao.QuestLoader - Квест с ID 36 успешно загружен
+2024-12-17 01:46:46.448 [http-nio-8080-exec-3] INFO  com.libraryquest.dao.QuestLoader - Шаг с ID 74 из квеста с ID 36 успешно загружен
+2024-12-17 01:46:55.461 [http-nio-8080-exec-7] INFO  com.libraryquest.dao.QuestLoader - Квест с ID 36 успешно загружен
+2024-12-17 01:46:55.462 [http-nio-8080-exec-7] INFO  com.libraryquest.dao.QuestLoader - Шаг с ID 75 из квеста с ID 36 успешно загружен
+2024-12-17 01:47:07.970 [http-nio-8080-exec-9] INFO  com.libraryquest.dao.QuestLoader - Квест с ID 36 успешно загружен
+2024-12-17 01:47:07.978 [http-nio-8080-exec-9] INFO  com.libraryquest.dao.QuestLoader - Квест с ID 36 успешно загружен
+2024-12-17 01:47:09.155 [http-nio-8080-exec-10] INFO  com.libraryquest.dao.QuestLoader - Успешно загружено 8 квестов
+2024-12-17 01:47:12.731 [http-nio-8080-exec-1] INFO  com.libraryquest.dao.QuestLoader - Квест с ID 36 успешно загружен
+2024-12-17 01:47:12.736 [http-nio-8080-exec-1] INFO  com.libraryquest.dao.QuestLoader - Квест с ID 36 успешно загружен
+2024-12-17 01:48:17.922 [http-nio-8080-exec-4] INFO  com.libraryquest.dao.QuestLoader - Квест с ID 36 успешно загружен
+2024-12-17 01:48:17.927 [http-nio-8080-exec-4] INFO  com.libraryquest.dao.QuestLoader - Квест с ID 36 успешно загружен
+2024-12-17 01:48:18.694 [http-nio-8080-exec-4] INFO  com.libraryquest.dao.QuestLoader - Квест с ID 36 успешно сохранен
+2024-12-17 01:48:18.724 [http-nio-8080-exec-5] INFO  com.libraryquest.dao.QuestLoader - Успешно загружено 8 квестов
+2024-12-17 01:48:23.350 [http-nio-8080-exec-7] INFO  com.libraryquest.dao.QuestLoader - Квест с ID 36 успешно загружен
+2024-12-17 01:48:23.353 [http-nio-8080-exec-7] INFO  com.libraryquest.dao.QuestLoader - Квест с ID 36 успешно загружен
+2024-12-17 01:48:24.232 [http-nio-8080-exec-9] INFO  com.libraryquest.dao.QuestLoader - Квест с ID 36 успешно загружен
+2024-12-17 01:48:24.232 [http-nio-8080-exec-9] INFO  com.libraryquest.dao.QuestLoader - Шаг с ID 74 из квеста с ID 36 успешно загружен
+2024-12-17 01:48:27.033 [http-nio-8080-exec-10] INFO  com.libraryquest.dao.QuestLoader - Квест с ID 36 успешно загружен
+2024-12-17 01:48:27.034 [http-nio-8080-exec-10] INFO  com.libraryquest.dao.QuestLoader - Шаг с ID 75 из квеста с ID 36 успешно загружен
+2024-12-17 01:48:31.729 [http-nio-8080-exec-1] INFO  com.libraryquest.dao.QuestLoader - Квест с ID 36 успешно загружен
+2024-12-17 01:48:31.729 [http-nio-8080-exec-1] INFO  com.libraryquest.dao.QuestLoader - Шаг с ID 79 из квеста с ID 36 успешно загружен
+2024-12-17 01:48:37.501 [http-nio-8080-exec-4] INFO  com.libraryquest.dao.QuestLoader - Квест с ID 36 успешно загружен
+2024-12-17 01:48:37.567 [http-nio-8080-exec-4] INFO  com.libraryquest.dao.QuestLoader - Обновлён счётчик на поражение для квеста ID 36 и пользователя Username Nadir
+2024-12-17 01:48:43.128 [http-nio-8080-exec-5] INFO  com.libraryquest.dao.QuestLoader - Успешно загружено 8 квестов
+2024-12-17 01:48:51.192 [http-nio-8080-exec-8] INFO  com.libraryquest.dao.QuestLoader - Квест с ID 36 успешно загружен
+2024-12-17 01:48:51.198 [http-nio-8080-exec-8] INFO  com.libraryquest.dao.QuestLoader - Квест с ID 36 успешно загружен
+2024-12-17 01:48:53.983 [http-nio-8080-exec-1] INFO  com.libraryquest.dao.QuestLoader - Успешно загружено 8 квестов

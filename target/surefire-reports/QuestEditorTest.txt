@@ -1,0 +1,20 @@
+-------------------------------------------------------------------------------
+Test set: QuestEditorTest
+-------------------------------------------------------------------------------
+Tests run: 4, Failures: 4, Errors: 0, Skipped: 0, Time elapsed: 0.001 sec <<< FAILURE!
+QuestEditorTest.testDoPostAddAction()  Time elapsed: 0 sec  <<< FAILURE!
+java.lang.NullPointerException: Cannot invoke "javax.servlet.http.HttpServletRequest.getParameter(String)" because "this.request" is null
+	at QuestEditorTest.testDoPostAddAction(QuestEditorTest.java:60)
+
+QuestEditorTest.testDoGetDeleteAction()  Time elapsed: 0 sec  <<< FAILURE!
+java.lang.NullPointerException: Cannot invoke "javax.servlet.http.HttpServletRequest.getParameter(String)" because "this.request" is null
+	at QuestEditorTest.testDoGetDeleteAction(QuestEditorTest.java:112)
+
+QuestEditorTest.testDoGetEditAction()  Time elapsed: 0 sec  <<< FAILURE!
+java.lang.NullPointerException: Cannot invoke "javax.servlet.http.HttpServletRequest.getParameter(String)" because "this.request" is null
+	at QuestEditorTest.testDoGetEditAction(QuestEditorTest.java:42)
+
+QuestEditorTest.testDoPostEditAction()  Time elapsed: 0.001 sec  <<< FAILURE!
+java.lang.NullPointerException: Cannot invoke "javax.servlet.http.HttpServletRequest.getParameter(String)" because "this.request" is null
+	at QuestEditorTest.testDoPostEditAction(QuestEditorTest.java:84)
+

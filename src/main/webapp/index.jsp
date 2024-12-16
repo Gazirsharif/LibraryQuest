@@ -68,9 +68,21 @@
 
         <h1>Добро пожаловать, ${sessionScope.user.username}!</h1>
 
-        <p>Это интерактивная библиотека текстовых квестов. Выберите квест из списка или создайте свой!</p>
+        <p>Это интерактивная библиотека текстовых квестов. Вы можете:</p>
+        <ul style="text-align: left; margin: 20px auto; max-width: 600px;">
+            <li>Выбрать квест из существующих;</li>
+            <li>Создать собственный квест через редактор;</li>
+            <li>Продолжить уже начатый квест;</li>
+            <li>Изучить статистику своих игр.</li>
+        </ul>
+        <p>Выберите действие:</p>
         <a href="${pageContext.request.contextPath}/questEdit">Перейти к списку квестов</a>
-
+        <a href="${pageContext.request.contextPath}/stepEdit">Перейти к списку шагов</a>
+        <a href="${pageContext.request.contextPath}/score">Перейти к общему счету</a>
+        <br>
+        <br>
+        <p>После завершения работы выйдите из системы для защиты вашей учетной записи.<p>
+        <a href="${pageContext.request.contextPath}/logout" style="background-color: #FF5722;">Выйти</a>
     </main>
 
     <footer>
